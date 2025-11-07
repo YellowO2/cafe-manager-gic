@@ -1,11 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCafeDto } from './dto/create-cafe.dto';
 import { UpdateCafeDto } from './dto/update-cafe.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class CafesService {
+  constructor(private readonly prisma: PrismaService) {}
+
   create(createCafeDto: CreateCafeDto) {
-    return 'This action adds a new cafe';
+    return this.prisma.cafe.create({
+      data: createCafeDto,
+    });
   }
 
   findAll() {
