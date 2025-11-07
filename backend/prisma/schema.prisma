@@ -26,5 +26,5 @@ model Cafe {
   description String
   logo        String?
   location    String
-  employees   Employee[]
+  employees   Employee[] //need not be explicit, inferred from the employee
 }

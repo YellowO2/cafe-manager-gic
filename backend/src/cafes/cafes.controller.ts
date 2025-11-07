@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CafesService } from './cafes.service';
 import { CreateCafeDto } from './dto/create-cafe.dto';
@@ -21,22 +22,22 @@ export class CafesController {
   }
 
   @Get()
-  findAll() {
-    return this.cafesService.findAll();
+  findAll(@Query('location') location?: string) {
+    return this.cafesService.findAll(location);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.cafesService.findOne(+id);
+    return this.cafesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateCafeDto: UpdateCafeDto) {
-    return this.cafesService.update(+id, updateCafeDto);
+    return this.cafesService.update(id, updateCafeDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.cafesService.remove(+id);
+    return this.cafesService.remove(id);
   }
 }

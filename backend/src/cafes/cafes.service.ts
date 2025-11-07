@@ -13,19 +13,31 @@ export class CafesService {
     });
   }
 
-  findAll() {
-    return `This action returns all cafes`;
+  findAll(location?: string) {
+    return this.prisma.cafe.findMany({
+      include: { _count: { select: { employees: true } } },
+      orderBy: { employees: { _count: 'desc' } },
+      where: location ? { location } : {},
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cafe`;
+  // id as in uuid
+  findOne(id: string) {
+    return this.prisma.cafe.findUnique({
+      where: { id },
+    });
   }
 
-  update(id: number, updateCafeDto: UpdateCafeDto) {
-    return `This action updates a #${id} cafe`;
+  update(id: string, updateCafeDto: UpdateCafeDto) {
+    return this.prisma.cafe.update({
+      where: { id },
+      data: updateCafeDto,
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cafe`;
+  remove(id: string) {
+    return this.prisma.cafe.delete({
+      where: { id },
+    });
   }
 }
