@@ -13,11 +13,19 @@ export class CafesService {
     });
   }
 
-  findAll(location?: string) {
-    return this.prisma.cafe.findMany({
+  async findAll(location?: string) {
+    const cafes = await this.prisma.cafe.findMany({
       include: { _count: { select: { employees: true } } },
       orderBy: { employees: { _count: 'desc' } },
       where: location ? { location } : {},
+    });
+
+    return cafes.map((cafe) => {
+      const { _count, ...restOfCafe } = cafe;
+      return {
+        ...restOfCafe,
+        employees: _count.employees,
+      };
     });
   }
 

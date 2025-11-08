@@ -10,7 +10,7 @@ export class CreateCafeDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(6)
-  @MaxLength(30)
+  @MaxLength(10)
   name: string;
 
   @IsString()

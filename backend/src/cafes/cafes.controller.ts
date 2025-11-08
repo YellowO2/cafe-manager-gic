@@ -3,10 +3,10 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   Query,
+  Put,
 } from '@nestjs/common';
 import { CafesService } from './cafes.service';
 import { CreateCafeDto } from './dto/create-cafe.dto';
@@ -31,7 +31,7 @@ export class CafesController {
     return this.cafesService.findOne(id);
   }
 
-  @Patch(':id')
+  @Put(':id')
   update(@Param('id') id: string, @Body() updateCafeDto: UpdateCafeDto) {
     return this.cafesService.update(id, updateCafeDto);
   }
