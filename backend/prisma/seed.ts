@@ -15,6 +15,7 @@ async function main() {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const cafe2 = await prisma.cafe.create({
     data: {
       name: 'The Grind',
