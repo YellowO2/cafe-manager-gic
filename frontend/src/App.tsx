@@ -1,30 +1,19 @@
-import { Routes, Route, Navigate, Link } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import CafesPage from "./features/cafe/CafesPage";
 import EmployeesPage from "./features/employee/EmployeesPage";
-import { Button } from "antd";
+import PageLayout from "./components/PageLayout";
 
 function App() {
   return (
-    <>
-      <nav>
-        <ul>
-          <Button type="primary">Hello Antd</Button>;
-          <li>
-            <Link to="/cafes">Cafes</Link>
-          </li>
-          <li>
-            <Link to="/employees">Employees</Link>
-          </li>
-        </ul>
-      </nav>
-      <main>
-        <Routes>
-          <Route path="/" element={<Navigate to="/cafes" />} />
-          <Route path="/cafes" element={<CafesPage />} />
-          <Route path="/employees" element={<EmployeesPage />} />
-        </Routes>
-      </main>
-    </>
+    <Routes>
+      <Route path="/" element={<PageLayout />}>
+        {/* Layout route:
+        https://reactrouter.com/start/declarative/routing#layout-routes */}
+        <Route index element={<Navigate to="/cafes" replace />} />
+        <Route path="cafes" element={<CafesPage />} />
+        <Route path="employees" element={<EmployeesPage />} />
+      </Route>
+    </Routes>
   );
 }
 
