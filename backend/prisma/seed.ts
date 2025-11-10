@@ -58,7 +58,7 @@ async function main() {
       name: 'Alicia',
       email_address: 'alicia@test.com',
       phone_number: '98765432',
-      gender: Gender.Female,
+      gender: Gender.female,
       start_date: new Date('2023-05-10'),
       cafe: {
         connect: { id: cafe1.id },
@@ -72,7 +72,7 @@ async function main() {
       name: 'Brobby',
       email_address: 'brobby@test.com',
       phone_number: '81234567',
-      gender: Gender.Male,
+      gender: Gender.male,
       start_date: new Date('2022-11-20'),
       cafe: {
         connect: { id: cafe1.id },
@@ -86,7 +86,7 @@ async function main() {
       name: 'Driana',
       email_address: 'driana@test.com',
       phone_number: '92223333',
-      gender: Gender.Female,
+      gender: Gender.female,
       start_date: new Date('2024-01-15'),
       cafe: {
         connect: { id: cafe1.id },
@@ -100,7 +100,7 @@ async function main() {
       name: 'Edward',
       email_address: 'edward@test.com',
       phone_number: '88887777',
-      gender: Gender.Male,
+      gender: Gender.male,
       start_date: new Date('2023-08-22'),
       cafe: {
         connect: { id: cafe1.id },
@@ -114,7 +114,7 @@ async function main() {
       name: 'Fioana',
       email_address: 'fioana@test.com',
       phone_number: '91112222',
-      gender: Gender.Female,
+      gender: Gender.female,
       start_date: new Date('2024-06-01'),
       cafe: {
         connect: { id: cafe1.id },
@@ -129,7 +129,7 @@ async function main() {
       name: 'George',
       email_address: 'george@test.com',
       phone_number: '93334444',
-      gender: Gender.Male,
+      gender: Gender.male,
       start_date: new Date('2023-03-10'),
       cafe: {
         connect: { id: cafe2.id },
@@ -143,7 +143,7 @@ async function main() {
       name: 'Hannah',
       email_address: 'hannah@test.com',
       phone_number: '85556666',
-      gender: Gender.Female,
+      gender: Gender.female,
       start_date: new Date('2024-02-20'),
       cafe: {
         connect: { id: cafe2.id },
@@ -157,7 +157,7 @@ async function main() {
       name: 'Briant',
       email_address: 'briant@test.com',
       phone_number: '97778888',
-      gender: Gender.Male,
+      gender: Gender.male,
       start_date: new Date('2023-12-05'),
       cafe: {
         connect: { id: cafe2.id },
@@ -172,7 +172,7 @@ async function main() {
       name: 'Julisa',
       email_address: 'julisa@test.com',
       phone_number: '89990000',
-      gender: Gender.Female,
+      gender: Gender.female,
       start_date: new Date('2024-04-12'),
       cafe: {
         connect: { id: cafe3.id },
@@ -186,7 +186,7 @@ async function main() {
       name: 'Kevina',
       email_address: 'kevina@test.com',
       phone_number: '91113333',
-      gender: Gender.Male,
+      gender: Gender.male,
       start_date: new Date('2023-09-18'),
       cafe: {
         connect: { id: cafe3.id },
@@ -201,7 +201,7 @@ async function main() {
       name: 'Laurra',
       email_address: 'laura@test.com',
       phone_number: '94445555',
-      gender: Gender.Female,
+      gender: Gender.female,
       start_date: new Date('2024-07-01'),
       cafe: {
         connect: { id: cafe4.id },
@@ -217,7 +217,7 @@ async function main() {
       name: 'Charlie',
       email_address: 'charlie@test.com',
       phone_number: '99998888',
-      gender: Gender.Male,
+      gender: Gender.male,
       // No cafe assignment
     },
   });

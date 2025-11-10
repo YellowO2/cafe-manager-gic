@@ -1,20 +1,26 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Form, Input, Button, message, Space } from "antd";
+import { Form, Input, Button, message, Space, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import type { UploadFile } from "antd/es/upload/interface";
 import { getCafe, createCafe, updateCafe } from "../../api/cafes";
 import type { CafeFormData } from "../../types";
 import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
 
 const { TextArea } = Input;
 
+type CafeFormValues = Omit<CafeFormData, "logo"> & { logo?: UploadFile[] };
+
 const CafeForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [form] = Form.useForm<CafeFormData>();
+  const [form] = Form.useForm<CafeFormValues>();
   const isEditMode = !!id;
-  const [initialValues, setInitialValues] = useState<CafeFormData | null>(null);
+  const [initialValues, setInitialValues] = useState<CafeFormValues | null>(
+    null
+  );
 
   // Use the custom hook for form navigation blocking
   const { setIsDirty, handleValuesChange, BlockerModal } =
@@ -33,19 +39,31 @@ const CafeForm: React.FC = () => {
   // Populate form
   useEffect(() => {
     if (isEditMode && cafeData) {
-      const values = {
+      const values: CafeFormValues = {
         name: cafeData.name,
         description: cafeData.description,
-        logo: cafeData.logo,
         location: cafeData.location,
       };
+
+      // Handle logo: if it exists, create a file list item for display
+      if (cafeData.logo) {
+        values.logo = [
+          {
+            uid: "-1",
+            name: "logo",
+            status: "done",
+            url: cafeData.logo,
+          },
+        ];
+      }
+
       form.setFieldsValue(values);
       setInitialValues(values);
     } else if (!isEditMode) {
       setInitialValues({
         name: "",
         description: "",
-        logo: "",
+        logo: undefined,
         location: "",
       });
     }
@@ -80,11 +98,36 @@ const CafeForm: React.FC = () => {
     },
   });
 
-  const handleSubmit = (values: CafeFormData) => {
-    const cafeData = {
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
+  const handleSubmit = async (values: CafeFormValues) => {
+    // Extract the file from the upload component
+    let logoValue = "";
+    if (values.logo && values.logo.length > 0) {
+      const file = values.logo[0];
+      if (file.originFileObj) {
+        try {
+          logoValue = await convertFileToBase64(file.originFileObj as File);
+        } catch {
+          messageApi.error("Failed to process logo file");
+          return;
+        }
+      } else if (file.url) {
+        logoValue = file.url;
+      }
+    }
+
+    const cafeData: CafeFormData = {
       name: values.name,
       description: values.description,
-      logo: values.logo || "",
+      logo: logoValue,
       location: values.location,
     };
 
@@ -145,11 +188,42 @@ const CafeForm: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            label="Logo URL"
+            label="Logo"
             name="logo"
-            tooltip="Optional: Enter a URL to the café logo image"
+            tooltip="Upload a logo image (max 2MB)"
+            valuePropName="fileList"
+            getValueFromEvent={(e) => {
+              if (Array.isArray(e)) {
+                return e;
+              }
+              return e?.fileList;
+            }}
+            rules={[
+              {
+                validator: (_, fileList) => {
+                  if (!fileList || fileList.length === 0) {
+                    return Promise.resolve();
+                  }
+                  const file = fileList[0];
+                  const isLt2M = file.size / 1024 / 1024 < 2;
+                  if (!isLt2M) {
+                    return Promise.reject(
+                      new Error("Logo must be smaller than 2MB")
+                    );
+                  }
+                  return Promise.resolve();
+                },
+              },
+            ]}
           >
-            <Input placeholder="https://example.com/logo.png" />
+            <Upload
+              maxCount={1}
+              beforeUpload={() => false}
+              accept="image/*"
+              listType="picture"
+            >
+              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+            </Upload>
           </Form.Item>
 
           <Form.Item
