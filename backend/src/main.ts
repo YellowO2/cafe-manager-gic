@@ -8,6 +8,14 @@ async function bootstrap() {
   app.enableCors({
     origin: 'http://localhost:5173', // Only allows your frontend
   });
+
+  app.use((req, res, next) => {
+    console.log(
+      `[${req.method}] ${req.url}: ${req.body ? JSON.stringify(req.body) : ''}`,
+    );
+    next();
+  });
+
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

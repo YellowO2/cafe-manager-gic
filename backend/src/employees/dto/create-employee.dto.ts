@@ -3,12 +3,13 @@ import {
   IsNotEmpty,
   MinLength,
   MaxLength,
-  IsOptional,
   IsEmail,
   Matches,
-  IsDateString,
   IsEnum,
+  IsDateString,
   IsUUID,
+  IsOptional,
+  ValidateIf,
 } from 'class-validator';
 import { Gender } from '@prisma/client';
 
@@ -23,22 +24,26 @@ export class CreateEmployeeDto {
   @IsNotEmpty()
   email_address: string;
 
+  @IsString()
+  @IsNotEmpty()
   @Matches(/^[89]\d{7}$/, {
-    message: 'Phone number must be 8 digits and start with 8 or 9',
+    message: 'Phone number must be an 8-digit number starting with 8 or 9.',
   })
   phone_number: string;
 
-  //   @IsString()
-  @IsNotEmpty()
   // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   @IsEnum(Gender)
+  @IsNotEmpty()
   gender: Gender;
 
-  @IsOptional()
-  @IsDateString()
-  start_date?: Date;
-
+  @ValidateIf((o: CreateEmployeeDto) => o.start_date != null)
+  @IsNotEmpty({ message: 'cafeId must be provided if start_date exists.' })
   @IsOptional()
   @IsUUID()
   cafeId?: string;
+
+  @ValidateIf((o: CreateEmployeeDto) => o.cafeId != null)
+  @IsNotEmpty()
+  @IsDateString()
+  start_date?: Date;
 }

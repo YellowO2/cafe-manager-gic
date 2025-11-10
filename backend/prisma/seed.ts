@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // prisma/seed.ts
-// Names of cafe and employee should be < 10 characters
+// Names of cafe and employee should be >6 and < 10 characters
 import { PrismaClient, Gender } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -55,8 +55,8 @@ async function main() {
   await prisma.employee.create({
     data: {
       id: 'UI1234567',
-      name: 'Alice',
-      email_address: 'alice@test.com',
+      name: 'Alicia',
+      email_address: 'alicia@test.com',
       phone_number: '98765432',
       gender: Gender.Female,
       start_date: new Date('2023-05-10'),
@@ -69,8 +69,8 @@ async function main() {
   await prisma.employee.create({
     data: {
       id: 'UI7654321',
-      name: 'Bob',
-      email_address: 'bob@test.com',
+      name: 'Brobby',
+      email_address: 'brobby@test.com',
       phone_number: '81234567',
       gender: Gender.Male,
       start_date: new Date('2022-11-20'),
@@ -83,8 +83,8 @@ async function main() {
   await prisma.employee.create({
     data: {
       id: 'UIAA11BB2',
-      name: 'Diana',
-      email_address: 'diana@test.com',
+      name: 'Driana',
+      email_address: 'driana@test.com',
       phone_number: '92223333',
       gender: Gender.Female,
       start_date: new Date('2024-01-15'),
@@ -111,8 +111,8 @@ async function main() {
   await prisma.employee.create({
     data: {
       id: 'UIEE55FF6',
-      name: 'Fiona',
-      email_address: 'fiona@test.com',
+      name: 'Fioana',
+      email_address: 'fioana@test.com',
       phone_number: '91112222',
       gender: Gender.Female,
       start_date: new Date('2024-06-01'),
@@ -154,8 +154,8 @@ async function main() {
   await prisma.employee.create({
     data: {
       id: 'UIKKLLMM1',
-      name: 'Ian',
-      email_address: 'ian@test.com',
+      name: 'Briant',
+      email_address: 'briant@test.com',
       phone_number: '97778888',
       gender: Gender.Male,
       start_date: new Date('2023-12-05'),
@@ -169,8 +169,8 @@ async function main() {
   await prisma.employee.create({
     data: {
       id: 'UINNOOPP2',
-      name: 'Julia',
-      email_address: 'julia@test.com',
+      name: 'Julisa',
+      email_address: 'julisa@test.com',
       phone_number: '89990000',
       gender: Gender.Female,
       start_date: new Date('2024-04-12'),
@@ -183,8 +183,8 @@ async function main() {
   await prisma.employee.create({
     data: {
       id: 'UIQQRRSS3',
-      name: 'Kevin',
-      email_address: 'kevin@test.com',
+      name: 'Kevina',
+      email_address: 'kevina@test.com',
       phone_number: '91113333',
       gender: Gender.Male,
       start_date: new Date('2023-09-18'),
@@ -198,7 +198,7 @@ async function main() {
   await prisma.employee.create({
     data: {
       id: 'UITTUVWW4',
-      name: 'Laura',
+      name: 'Laurra',
       email_address: 'laura@test.com',
       phone_number: '94445555',
       gender: Gender.Female,
@@ -211,7 +211,6 @@ async function main() {
 
   // Cafe5 (Latte Lab) - No employees (to test empty cafe)
 
-  // Unassigned employee (Charlie) - No cafe
   await prisma.employee.create({
     data: {
       id: 'UIABCDEFG',
@@ -230,7 +229,7 @@ async function main() {
   console.log(`- Bean Bar: 2 employees`);
   console.log(`- Espresso: 1 employee`);
   console.log(`- Latte Lab: 0 employees`);
-  console.log(`- Unassigned: 1 employee (Charlie)`);
+  console.log(`- Unassigned: 1 employee`);
 }
 
 main()

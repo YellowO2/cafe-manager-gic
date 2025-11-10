@@ -74,7 +74,7 @@ const PageLayout = () => {
         </div>
       </Content>
 
-      <Footer
+      {/* <Footer
         style={{
           textAlign: "center",
           background: "#fafafa",
@@ -88,7 +88,7 @@ const PageLayout = () => {
         <div style={{ fontSize: "12px", marginTop: "4px", color: "#bfbfbf" }}>
           Built with React, Ant Design & AG Grid
         </div>
-      </Footer>
+      </Footer> */}
     </Layout>
   );
 };

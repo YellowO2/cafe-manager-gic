@@ -11,7 +11,7 @@ const CafeForm: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<CafeFormData>();
   const isEditMode = !!id;
 
   // Fetch cafe data if editing
@@ -33,16 +33,17 @@ const CafeForm: React.FC = () => {
     }
   }, [isEditMode, cafeData, form]);
 
+  const [messageApi, contextHolder] = message.useMessage();
   // Create mutation
   const createMutation = useMutation({
     mutationFn: createCafe,
     onSuccess: () => {
-      message.success("Café created successfully");
+      messageApi.success("Café created successfully");
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
-      navigate("/cafes");
+      //   navigate("/cafes");
     },
     onError: (error: Error) => {
-      message.error(`Failed to create café: ${error.message}`);
+      messageApi.error(`Failed to create café: ${error.message}`);
     },
   });
 
@@ -51,12 +52,12 @@ const CafeForm: React.FC = () => {
     mutationFn: ({ id, data }: { id: string; data: CafeFormData }) =>
       updateCafe(id, data),
     onSuccess: () => {
-      message.success("Café updated successfully");
+      messageApi.success("Café updated successfully");
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
-      navigate("/cafes");
+      //   navigate("/cafes");
     },
     onError: (error: Error) => {
-      message.error(`Failed to update café: ${error.message}`);
+      messageApi.error(`Failed to update café: ${error.message}`);
     },
   });
 
@@ -81,72 +82,78 @@ const CafeForm: React.FC = () => {
   };
 
   return (
-    <div style={{ maxWidth: 600, margin: "0 auto" }}>
-      <h2>{isEditMode ? "Edit Café" : "Add New Café"}</h2>
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Name"
-          name="name"
-          rules={[
-            { required: true, message: "Please enter café name" },
-            { min: 6, message: "Name must be at least 6 characters" },
-            { max: 10, message: "Name must not exceed 10 characters" },
-          ]}
+    <>
+      {contextHolder}
+      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+        <h2>{isEditMode ? "Edit Café" : "Add New Café"}</h2>
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          autoComplete="off"
         >
-          <Input placeholder="Enter café name" />
-        </Form.Item>
+          <Form.Item
+            label="Name"
+            name="name"
+            rules={[
+              { required: true, message: "Please enter café name" },
+              { min: 6, message: "Name must be at least 6 characters" },
+              { max: 10, message: "Name must not exceed 10 characters" },
+            ]}
+          >
+            <Input placeholder="Enter café name" />
+          </Form.Item>
 
-        <Form.Item
-          label="Description"
-          name="description"
-          rules={[
-            { required: true, message: "Please enter description" },
-            { max: 256, message: "Description must not exceed 256 characters" },
-          ]}
-        >
-          <TextArea
-            rows={4}
-            placeholder="Enter café description"
-            showCount
-            maxLength={256}
-          />
-        </Form.Item>
+          <Form.Item
+            label="Description"
+            name="description"
+            rules={[
+              { required: true, message: "Please enter description" },
+              {
+                max: 256,
+                message: "Description must not exceed 256 characters",
+              },
+            ]}
+          >
+            <TextArea
+              rows={4}
+              placeholder="Enter café description"
+              showCount
+              maxLength={256}
+            />
+          </Form.Item>
 
-        <Form.Item
-          label="Logo URL"
-          name="logo"
-          tooltip="Optional: Enter a URL to the café logo image"
-        >
-          <Input placeholder="https://example.com/logo.png" />
-        </Form.Item>
+          <Form.Item
+            label="Logo URL"
+            name="logo"
+            tooltip="Optional: Enter a URL to the café logo image"
+          >
+            <Input placeholder="https://example.com/logo.png" />
+          </Form.Item>
 
-        <Form.Item
-          label="Location"
-          name="location"
-          rules={[{ required: true, message: "Please enter location" }]}
-        >
-          <Input placeholder="Enter location" />
-        </Form.Item>
+          <Form.Item
+            label="Location"
+            name="location"
+            rules={[{ required: true, message: "Please enter location" }]}
+          >
+            <Input placeholder="Enter location" />
+          </Form.Item>
 
-        <Form.Item>
-          <Space>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={createMutation.isPending || updateMutation.isPending}
-            >
-              {isEditMode ? "Update" : "Submit"}
-            </Button>
-            <Button onClick={handleCancel}>Cancel</Button>
-          </Space>
-        </Form.Item>
-      </Form>
-    </div>
+          <Form.Item>
+            <Space>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={createMutation.isPending || updateMutation.isPending}
+              >
+                {isEditMode ? "Update" : "Submit"}
+              </Button>
+              <Button onClick={handleCancel}>Cancel</Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </div>
+    </>
   );
 };
 

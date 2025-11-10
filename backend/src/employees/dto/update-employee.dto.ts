@@ -1,38 +1,33 @@
-// src/employees/dto/update-employee.dto.ts
+import { PartialType, OmitType } from '@nestjs/mapped-types';
+import { CreateEmployeeDto } from './create-employee.dto';
 import {
-  IsString,
+  Allow,
   IsOptional,
-  MinLength,
-  MaxLength,
-  IsEmail,
-  Matches,
-  IsEnum,
-  IsDateString,
   IsUUID,
   ValidateIf,
   IsNotEmpty,
-  Allow,
+  IsDateString,
 } from 'class-validator';
-import { Gender } from '@prisma/client';
 
-export class UpdateEmployeeDto {
-  // All simple fields are optional
-  @IsOptional() @IsString() @MinLength(6) @MaxLength(10) name?: string;
-  @IsOptional() @IsEmail() email?: string;
-  @IsOptional() @Matches(/^[89]\d{7}$/) phone_number?: string;
-  @IsOptional() @IsEnum(Gender) gender?: Gender;
+class UpdateEmployeeBaseDto extends PartialType(
+  OmitType(CreateEmployeeDto, ['cafeId', 'start_date'] as const),
+) {}
 
-  // The 'cafeId' and 'start_date' are now a linked pair
+export class UpdateEmployeeDto extends UpdateEmployeeBaseDto {
+  @ValidateIf(
+    (o: UpdateEmployeeDto) => o.start_date !== undefined || o.cafeId === null,
+  )
   @IsOptional()
   @IsUUID()
-  @Allow() // Allow 'null' to be passed for un-assignment
+  @Allow() // Allows cafeId to be null
   cafeId?: string | null;
 
-  @ValidateIf((o: UpdateEmployeeDto) => {
-    if (o.cafeId) return true;
-    return false;
-  }) // If cafeId is a non-null string...
-  @IsNotEmpty() // ...then start_date is required
+  @ValidateIf(
+    (o: UpdateEmployeeDto) => o.cafeId !== undefined && o.cafeId !== null,
+  )
+  @IsNotEmpty({
+    message: 'start_date must be provided if employee is assigned a cafe.',
+  })
   @IsDateString()
   start_date?: Date;
 }
