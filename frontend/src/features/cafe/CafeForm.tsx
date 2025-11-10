@@ -1,9 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, Button, message, Space } from "antd";
 import { getCafe, createCafe, updateCafe } from "../../api/cafes";
 import type { CafeFormData } from "../../types";
+import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
 
 const { TextArea } = Input;
 
@@ -13,6 +14,14 @@ const CafeForm: React.FC = () => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<CafeFormData>();
   const isEditMode = !!id;
+  const [initialValues, setInitialValues] = useState<CafeFormData | null>(null);
+
+  // Use the custom hook for form navigation blocking
+  const { setIsDirty, handleValuesChange, BlockerModal } =
+    useFormNavigationBlocker({
+      form,
+      initialValues,
+    });
 
   // Fetch cafe data if editing
   const { data: cafeData } = useQuery({
@@ -21,26 +30,35 @@ const CafeForm: React.FC = () => {
     enabled: isEditMode,
   });
 
-  // Populate form when editing
+  // Populate form
   useEffect(() => {
     if (isEditMode && cafeData) {
-      form.setFieldsValue({
+      const values = {
         name: cafeData.name,
         description: cafeData.description,
         logo: cafeData.logo,
         location: cafeData.location,
+      };
+      form.setFieldsValue(values);
+      setInitialValues(values);
+    } else if (!isEditMode) {
+      setInitialValues({
+        name: "",
+        description: "",
+        logo: "",
+        location: "",
       });
     }
   }, [isEditMode, cafeData, form]);
 
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi, messageContextHolder] = message.useMessage();
   // Create mutation
   const createMutation = useMutation({
     mutationFn: createCafe,
     onSuccess: () => {
       messageApi.success("Café created successfully");
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
-      //   navigate("/cafes");
+      setIsDirty(false); // Reset dirty state on success
     },
     onError: (error: Error) => {
       messageApi.error(`Failed to create café: ${error.message}`);
@@ -54,7 +72,8 @@ const CafeForm: React.FC = () => {
     onSuccess: () => {
       messageApi.success("Café updated successfully");
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
-      //   navigate("/cafes");
+      setIsDirty(false); // Reset dirty state on success
+      navigate("/cafes");
     },
     onError: (error: Error) => {
       messageApi.error(`Failed to update café: ${error.message}`);
@@ -77,19 +96,21 @@ const CafeForm: React.FC = () => {
   };
 
   const handleCancel = () => {
-    // TODO: Add unsaved changes warning
     navigate("/cafes");
   };
 
   return (
     <>
-      {contextHolder}
+      {messageContextHolder}
+      {BlockerModal}
+
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
         <h2>{isEditMode ? "Edit Café" : "Add New Café"}</h2>
         <Form
           form={form}
           layout="vertical"
           onFinish={handleSubmit}
+          onValuesChange={handleValuesChange}
           autoComplete="off"
         >
           <Form.Item

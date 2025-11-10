@@ -1,26 +1,45 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import CafesPage from "./features/cafe/CafesPage";
 import CafeForm from "./features/cafe/CafeForm";
 import EmployeesPage from "./features/employee/EmployeesPage";
 import EmployeeForm from "./features/employee/EmployeeForm";
 import PageLayout from "./components/PageLayout";
 
-function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<PageLayout />}>
-        {/* Layout route:
-        https://reactrouter.com/start/declarative/routing#layout-routes */}
-        <Route index element={<Navigate to="/cafes" replace />} />
-        <Route path="cafes" element={<CafesPage />} />
-        <Route path="cafes/add" element={<CafeForm />} />
-        <Route path="cafes/edit/:id" element={<CafeForm />} />
-        <Route path="employees" element={<EmployeesPage />} />
-        <Route path="employees/add" element={<EmployeeForm />} />
-        <Route path="employees/edit/:id" element={<EmployeeForm />} />
-      </Route>
-    </Routes>
-  );
-}
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <PageLayout />,
+    children: [
+      {
+        index: true,
+        element: <Navigate to="/cafes" replace />,
+      },
+      {
+        path: "cafes",
+        element: <CafesPage />,
+      },
+      {
+        path: "cafes/add",
+        element: <CafeForm />,
+      },
+      {
+        path: "cafes/edit/:id",
+        element: <CafeForm />,
+      },
+      {
+        path: "employees",
+        element: <EmployeesPage />,
+      },
+      {
+        path: "employees/add",
+        element: <EmployeeForm />,
+      },
+      {
+        path: "employees/edit/:id",
+        element: <EmployeeForm />,
+      },
+    ],
+  },
+]);
 
-export default App;
+export default router;

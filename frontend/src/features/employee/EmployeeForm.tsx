@@ -1,5 +1,5 @@
-// contains the form for adding/editing employees, similar to CafeForm.tsx
-import React, { useEffect } from "react";
+// Contains the form for adding/editing employees, similar to CafeForm.tsx
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -20,6 +20,7 @@ import {
 import { getCafes } from "../../api/cafes";
 import type { EmployeeFormData } from "../../types";
 import dayjs from "dayjs";
+import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
 
 type EmployeeFormValues = Omit<EmployeeFormData, "start_date"> & {
   start_date?: dayjs.Dayjs | null;
@@ -31,6 +32,16 @@ const EmployeeForm: React.FC = () => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<EmployeeFormValues>();
   const isEditMode = !!id;
+  const [initialValues, setInitialValues] = useState<EmployeeFormValues | null>(
+    null
+  );
+
+  // Use the custom hook for form navigation blocking
+  const { setIsDirty, handleValuesChange, BlockerModal } =
+    useFormNavigationBlocker({
+      form,
+      initialValues,
+    });
 
   // Fetch employee data if editing
   const { data: employeeData } = useQuery({
@@ -42,7 +53,7 @@ const EmployeeForm: React.FC = () => {
   // Populate form when editing
   useEffect(() => {
     if (isEditMode && employeeData) {
-      form.setFieldsValue({
+      const values = {
         name: employeeData.name,
         email_address: employeeData.email_address,
         phone_number: employeeData.phone_number,
@@ -51,9 +62,19 @@ const EmployeeForm: React.FC = () => {
         start_date: employeeData.start_date
           ? dayjs(employeeData.start_date)
           : null,
+      };
+      form.setFieldsValue(values);
+      setInitialValues(values);
+    } else if (!isEditMode) {
+      setInitialValues({
+        name: "",
+        email_address: "",
+        phone_number: "",
+        gender: "male",
+        cafeId: undefined,
+        start_date: null,
       });
     }
-    console.log("start_date", employeeData?.start_date);
   }, [isEditMode, employeeData, form]);
 
   const [messageApi, contextHolder] = message.useMessage();
@@ -63,6 +84,7 @@ const EmployeeForm: React.FC = () => {
     onSuccess: () => {
       messageApi.success("Employee created successfully");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
+      setIsDirty(false); // Reset dirty state on success
       navigate("/employees");
     },
     onError: (error: Error) => {
@@ -77,6 +99,7 @@ const EmployeeForm: React.FC = () => {
     onSuccess: () => {
       messageApi.success("Employee updated successfully");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
+      setIsDirty(false); // Reset dirty state on success
       navigate("/employees");
     },
     onError: (error: Error) => {
@@ -115,10 +138,12 @@ const EmployeeForm: React.FC = () => {
   return (
     <>
       {contextHolder}
+      {BlockerModal}
       <Form
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
+        onValuesChange={handleValuesChange}
         initialValues={{
           name: "",
           email_address: "",
