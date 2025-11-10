@@ -51,8 +51,13 @@ export class EmployeesService {
     });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} employee`;
+  async findOne(id: string) {
+    return this.prisma.employee.findUniqueOrThrow({
+      where: { id },
+      include: {
+        cafe: true,
+      },
+    });
   }
 
   async update(id: string, updateEmployeeDto: UpdateEmployeeDto) {
