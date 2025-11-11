@@ -131,7 +131,14 @@ const EmployeeForm: React.FC = () => {
     <>
       {contextHolder}
       {BlockerModal}
-      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+      <div
+        style={{
+          margin: "0 auto",
+          background: "#fff",
+          padding: "32px",
+          borderRadius: "8px",
+        }}
+      >
         <PageHeader title={isEditMode ? "Edit Employee" : "Add New Employee"} />
         <Form
           form={form}

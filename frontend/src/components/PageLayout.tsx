@@ -32,12 +32,12 @@ const PageLayout = () => {
         style={{
           display: "flex",
           alignItems: "center",
-          // background: "#fff",
           background: "#fafafaff",
           paddingInline: 48,
-          borderBottom: "1px solid #f0f0f0",
+          top: 0,
+          zIndex: 10,
           boxShadow: "0 2px 9px rgba(0, 0, 0, 0.08)",
-          position: "relative",
+          position: "sticky",
         }}
       >
         {/* Logo/App Name */}

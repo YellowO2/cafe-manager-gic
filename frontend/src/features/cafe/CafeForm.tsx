@@ -182,7 +182,13 @@ const CafeForm: React.FC = () => {
       {messageContextHolder}
       {BlockerModal}
 
-      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+      <div
+        style={{
+          background: "#fff",
+          padding: "32px",
+          borderRadius: "8px",
+        }}
+      >
         <PageHeader title={isEditMode ? "Edit Café" : "Add New Café"} />
         <Form
           form={form}
