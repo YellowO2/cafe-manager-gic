@@ -68,12 +68,7 @@ const EmployeesPage: React.FC = () => {
       <PageHeader
         title={pageTitle}
         actions={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAddNew}
-            size="large"
-          >
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAddNew}>
             Add New Employee
           </Button>
         }

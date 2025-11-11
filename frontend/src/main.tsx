@@ -38,10 +38,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
             controlHeight: 38,
             colorBorder: "#d9d9d9",
             colorBorderSecondary: "#f0f0f0",
-
-            // Shadows
-            boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-            boxShadowSecondary: "0 1px 2px rgba(0,0,0,0.03)",
           },
           components: {
             Layout: {

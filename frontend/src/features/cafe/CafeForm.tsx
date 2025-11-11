@@ -13,6 +13,7 @@ import type { CafeFormData } from "../../types";
 import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
 import { convertFileToBase64 } from "../../utils/fileUtils";
 import { FormTextField } from "../../components/FormTextField";
+import PageHeader from "../../components/PageHeader";
 
 type CafeFormValues = Omit<CafeFormData, "logo"> & { logo?: UploadFile[] };
 
@@ -182,7 +183,7 @@ const CafeForm: React.FC = () => {
       {BlockerModal}
 
       <div style={{ maxWidth: 600, margin: "0 auto" }}>
-        <h2>{isEditMode ? "Edit Café" : "Add New Café"}</h2>
+        <PageHeader title={isEditMode ? "Edit Café" : "Add New Café"} />
         <Form
           form={form}
           layout="vertical"

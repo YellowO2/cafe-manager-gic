@@ -13,6 +13,7 @@ import type { EmployeeFormData } from "../../types";
 import dayjs from "dayjs";
 import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
 import { FormTextField } from "../../components/FormTextField";
+import PageHeader from "../../components/PageHeader";
 
 type EmployeeFormValues = Omit<EmployeeFormData, "start_date"> & {
   start_date?: dayjs.Dayjs | null;
@@ -130,113 +131,116 @@ const EmployeeForm: React.FC = () => {
     <>
       {contextHolder}
       {BlockerModal}
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={handleSubmit}
-        onValuesChange={handleValuesChange}
-        initialValues={{
-          name: "",
-          email_address: "",
-          phone_number: "",
-          gender: "",
-          cafeId: null,
-          start_date: null,
-        }}
-      >
-        <FormTextField
-          label="Name"
-          name="name"
-          placeholder="Enter employee name"
-          required
-          minLength={6}
-          maxLength={10}
-        />
-
-        <FormTextField
-          label="Email Address"
-          name="email_address"
-          placeholder="Enter email address"
-          type="email"
-          required
-        />
-
-        <FormTextField
-          label="Phone Number"
-          name="phone_number"
-          placeholder="Enter phone number"
-          required
-          customRules={[
-            {
-              pattern: /^[89]\d{7}$/,
-              message:
-                "Please enter an 8-digit SG phone number starting with 8 or 9",
-            },
-          ]}
-        />
-
-        <Form.Item
-          label="Gender"
-          name="gender"
-          rules={[{ required: true, message: "Please select gender" }]}
+      <div style={{ maxWidth: 600, margin: "0 auto" }}>
+        <PageHeader title={isEditMode ? "Edit Employee" : "Add New Employee"} />
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={handleSubmit}
+          onValuesChange={handleValuesChange}
+          initialValues={{
+            name: "",
+            email_address: "",
+            phone_number: "",
+            gender: "",
+            cafeId: null,
+            start_date: null,
+          }}
         >
-          <Radio.Group>
-            <Radio value="male">Male</Radio>
-            <Radio value="female">Female</Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
-          label="Cafe"
-          name="cafeId"
-          rules={[{ message: "Please enter cafe" }]}
-        >
-          <Select
-            allowClear
-            showSearch
-            placeholder="Select a cafe"
-            optionFilterProp="label"
-            options={(cafes.data || []).map((cafe) => ({
-              label: cafe.name,
-              value: cafe.id,
-            }))}
+          <FormTextField
+            label="Name"
+            name="name"
+            placeholder="Enter employee name"
+            required
+            minLength={6}
+            maxLength={10}
           />
-        </Form.Item>
 
-        <Form.Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) =>
-            prevValues.cafeId !== currentValues.cafeId
-          }
-        >
-          {({ getFieldValue }) =>
-            getFieldValue("cafeId") ? (
-              <Form.Item
-                label="Start Date"
-                name="start_date"
-                // preserve={false}
-                rules={[
-                  { required: true, message: "Please select a start date" },
-                ]}
+          <FormTextField
+            label="Email Address"
+            name="email_address"
+            placeholder="Enter email address"
+            type="email"
+            required
+          />
+
+          <FormTextField
+            label="Phone Number"
+            name="phone_number"
+            placeholder="Enter phone number"
+            required
+            customRules={[
+              {
+                pattern: /^[89]\d{7}$/,
+                message:
+                  "Please enter an 8-digit SG phone number starting with 8 or 9",
+              },
+            ]}
+          />
+
+          <Form.Item
+            label="Gender"
+            name="gender"
+            rules={[{ required: true, message: "Please select gender" }]}
+          >
+            <Radio.Group>
+              <Radio value="male">Male</Radio>
+              <Radio value="female">Female</Radio>
+            </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            label="Cafe"
+            name="cafeId"
+            rules={[{ message: "Please enter cafe" }]}
+          >
+            <Select
+              allowClear
+              showSearch
+              placeholder="Select a cafe"
+              optionFilterProp="label"
+              options={(cafes.data || []).map((cafe) => ({
+                label: cafe.name,
+                value: cafe.id,
+              }))}
+            />
+          </Form.Item>
+
+          <Form.Item
+            noStyle
+            shouldUpdate={(prevValues, currentValues) =>
+              prevValues.cafeId !== currentValues.cafeId
+            }
+          >
+            {({ getFieldValue }) =>
+              getFieldValue("cafeId") ? (
+                <Form.Item
+                  label="Start Date"
+                  name="start_date"
+                  // preserve={false}
+                  rules={[
+                    { required: true, message: "Please select a start date" },
+                  ]}
+                >
+                  <DatePicker style={{ width: "100%" }} />
+                </Form.Item>
+              ) : null
+            }
+          </Form.Item>
+
+          <Form.Item>
+            <Space>
+              <Button
+                type="primary"
+                htmlType="submit"
+                loading={createMutation.isPending || updateMutation.isPending}
               >
-                <DatePicker style={{ width: "100%" }} />
-              </Form.Item>
-            ) : null
-          }
-        </Form.Item>
-
-        <Form.Item>
-          <Space>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={createMutation.isPending || updateMutation.isPending}
-            >
-              {isEditMode ? "Update" : "Submit"}
-            </Button>
-            <Button onClick={handleCancel}>Cancel</Button>
-          </Space>
-        </Form.Item>
-      </Form>
+                {isEditMode ? "Update" : "Submit"}
+              </Button>
+              <Button onClick={handleCancel}>Cancel</Button>
+            </Space>
+          </Form.Item>
+        </Form>
+      </div>
     </>
   );
 };

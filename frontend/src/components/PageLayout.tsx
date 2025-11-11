@@ -1,94 +1,80 @@
 // src/components/PageLayout.tsx
 import { Layout, Menu } from "antd";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
+import { CoffeeOutlined, TeamOutlined } from "@ant-design/icons";
 
-const { Header, Content, Footer } = Layout;
-
-const navItems = [
-  { key: "cafes", label: <Link to="/cafes">Cafes</Link> },
-  { key: "employees", label: <Link to="/employees">Employees</Link> },
-];
+const { Header, Content } = Layout;
 
 const PageLayout = () => {
+  const location = useLocation();
+
+  // Determine which menu item is selected based on current path
+  const selectedKey = location.pathname.startsWith("/employees")
+    ? "employees"
+    : "cafes";
+
+  const menuItems = [
+    {
+      key: "cafes",
+      icon: <CoffeeOutlined />,
+      label: <Link to="/cafes">Cafés</Link>,
+    },
+    {
+      key: "employees",
+      icon: <TeamOutlined />,
+      label: <Link to="/employees">Employees</Link>,
+    },
+  ];
+
   return (
-    <Layout
-      style={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}
-    >
+    <Layout style={{ minHeight: "100vh" }}>
       <Header
         style={{
           display: "flex",
           alignItems: "center",
-          padding: "0 32px",
-          boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
-          position: "sticky",
-          top: 0,
-          zIndex: 10,
-          background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", // Modern gradient
+          // background: "#fff",
+          background: "#fafafaff",
+          paddingInline: 48,
+          borderBottom: "1px solid #f0f0f0",
+          boxShadow: "0 2px 9px rgba(0, 0, 0, 0.08)",
+          position: "relative",
         }}
       >
+        {/* Logo/App Name */}
         <div
           style={{
-            color: "#fff",
-            fontSize: "22px",
+            fontSize: "20px",
             fontWeight: "700",
-            marginRight: "64px",
-            whiteSpace: "nowrap",
-            letterSpacing: "-0.5px",
+            color: "#1890ff",
+            marginRight: "48px",
           }}
         >
-          ☕ Café Manager
+          Café Manager
         </div>
+
+        {/* Navigation Menu */}
         <Menu
-          theme="dark"
           mode="horizontal"
-          defaultSelectedKeys={["cafes"]}
-          items={navItems}
+          selectedKeys={[selectedKey]}
+          items={menuItems}
           style={{
             flex: 1,
-            minWidth: 0,
             border: "none",
-            background: "transparent",
+            background: "#fafafaff",
             fontSize: "15px",
           }}
         />
       </Header>
+
       <Content
         style={{
-          padding: "32px 24px",
+          padding: "48px",
           background: "#f5f5f5",
-          flex: 1,
+          minHeight: "calc(100vh - 64px)",
         }}
       >
-        <div
-          style={{
-            maxWidth: "1400px",
-            margin: "0 auto",
-            background: "#fff",
-            minHeight: 280,
-            padding: "32px",
-            borderRadius: "12px",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06)",
-          }}
-        >
-          <Outlet />
-        </div>
+        <Outlet />
       </Content>
-
-      {/* <Footer
-        style={{
-          textAlign: "center",
-          background: "#fafafa",
-          padding: "20px 50px",
-          borderTop: "1px solid #e8e8e8",
-          fontSize: "13px",
-          color: "#8c8c8c",
-        }}
-      >
-        <div>Café Employee Manager © {new Date().getFullYear()}</div>
-        <div style={{ fontSize: "12px", marginTop: "4px", color: "#bfbfbf" }}>
-          Built with React, Ant Design & AG Grid
-        </div>
-      </Footer> */}
     </Layout>
   );
 };

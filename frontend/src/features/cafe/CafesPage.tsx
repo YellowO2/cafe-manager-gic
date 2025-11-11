@@ -100,12 +100,7 @@ const CafesPage: React.FC = () => {
       <PageHeader
         title="Cafés"
         actions={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAddNew}
-            size="large"
-          >
+          <Button type="primary" icon={<PlusOutlined />} onClick={handleAddNew}>
             Add New Café
           </Button>
         }
