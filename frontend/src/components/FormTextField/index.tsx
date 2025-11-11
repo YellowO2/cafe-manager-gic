@@ -32,10 +32,11 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   type = "text",
   rows = 4,
   tooltip,
+  customRules = [],
   disabled = false,
 }) => {
   // Build validation rules based on props
-  const rules: Rule[] = [];
+  const rules: Rule[] = [...customRules];
 
   if (required) {
     rules.push({

@@ -78,7 +78,6 @@ const EmployeeForm: React.FC = () => {
       messageApi.success("Employee created successfully");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       setIsDirty(false); // Reset dirty state on success
-      navigate("/employees");
     },
     onError: (error: Error) => {
       messageApi.error(`Failed to create employee: ${error.message}`);

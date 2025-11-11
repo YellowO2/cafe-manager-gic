@@ -74,7 +74,13 @@ const EmployeesPage: React.FC = () => {
         }
       />
       <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
-        <AgGridReact<Employee> rowData={employees} columnDefs={columnDefs} />
+        <AgGridReact<Employee>
+          rowData={employees}
+          columnDefs={columnDefs}
+          pagination={true}
+          paginationPageSize={10}
+          paginationPageSizeSelector={[10, 15, 25, 50]}
+        />
       </div>
     </div>
   );

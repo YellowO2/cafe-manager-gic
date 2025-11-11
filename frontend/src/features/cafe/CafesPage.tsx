@@ -40,7 +40,7 @@ const CafesPage: React.FC = () => {
       width: 100,
     },
     { field: "name", headerName: "Name", flex: 1 },
-    { field: "description", headerName: "Description", flex: 2 },
+    { field: "description", headerName: "Description", flex: 1 },
     {
       field: "location",
       headerName: "Location",
@@ -69,6 +69,7 @@ const CafesPage: React.FC = () => {
           </Button>
         );
       },
+      flex: 1,
       filter: true,
     },
     {
@@ -86,7 +87,7 @@ const CafesPage: React.FC = () => {
           />
         );
       },
-      width: 200,
+      flex: 1,
       sortable: false,
       filter: false,
     },
@@ -106,7 +107,13 @@ const CafesPage: React.FC = () => {
         }
       />
       <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
-        <AgGridReact<Cafe> rowData={cafes} columnDefs={columnDefs} />
+        <AgGridReact<Cafe>
+          rowData={cafes}
+          columnDefs={columnDefs}
+          pagination={true}
+          paginationPageSize={10}
+          paginationPageSizeSelector={[10, 15, 25, 50]}
+        />
       </div>
     </div>
   );
