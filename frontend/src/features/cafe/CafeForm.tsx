@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, Input, Button, message, Space, Upload } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-import type { UploadFile } from "antd/es/upload/interface";
+import {
+  CloseCircleFilled,
+  LoadingOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
+import type { UploadChangeParam, UploadFile } from "antd/es/upload/interface";
 import { getCafe, createCafe, updateCafe } from "../../api/cafes";
 import type { CafeFormData } from "../../types";
 import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
@@ -21,6 +25,8 @@ const CafeForm: React.FC = () => {
   const [initialValues, setInitialValues] = useState<CafeFormValues | null>(
     null
   );
+  const [logoPreview, setLogoPreview] = useState<string | undefined>();
+  const [isLogoLoading, setIsLogoLoading] = useState(false);
 
   // Use the custom hook for form navigation blocking
   const { setIsDirty, handleValuesChange, BlockerModal } =
@@ -39,7 +45,7 @@ const CafeForm: React.FC = () => {
   // Populate form
   useEffect(() => {
     if (isEditMode && cafeData) {
-      const values: CafeFormValues = {
+      const cafeFormInitialValues: CafeFormValues = {
         name: cafeData.name,
         description: cafeData.description,
         location: cafeData.location,
@@ -47,7 +53,7 @@ const CafeForm: React.FC = () => {
 
       // Handle logo: if it exists, create a file list item for display
       if (cafeData.logo) {
-        values.logo = [
+        cafeFormInitialValues.logo = [
           {
             uid: "-1",
             name: "logo",
@@ -56,9 +62,9 @@ const CafeForm: React.FC = () => {
           },
         ];
       }
-
-      form.setFieldsValue(values);
-      setInitialValues(values);
+      form.setFieldsValue(cafeFormInitialValues);
+      setInitialValues(cafeFormInitialValues);
+      setLogoPreview(cafeData.logo ?? undefined);
     } else if (!isEditMode) {
       setInitialValues({
         name: "",
@@ -66,6 +72,7 @@ const CafeForm: React.FC = () => {
         logo: undefined,
         location: "",
       });
+      setLogoPreview(undefined);
     }
   }, [isEditMode, cafeData, form]);
 
@@ -91,7 +98,6 @@ const CafeForm: React.FC = () => {
       messageApi.success("Café updated successfully");
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
       setIsDirty(false); // Reset dirty state on success
-      navigate("/cafes");
     },
     onError: (error: Error) => {
       messageApi.error(`Failed to update café: ${error.message}`);
@@ -105,6 +111,35 @@ const CafeForm: React.FC = () => {
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
+  };
+
+  const handleLogoChange = async (
+    info: UploadChangeParam<UploadFile>
+  ): Promise<void> => {
+    const fileList = info.fileList;
+    if (!fileList || fileList.length === 0) {
+      setLogoPreview(undefined);
+      return;
+    }
+
+    const file = fileList[0];
+
+    if (file.url) {
+      setLogoPreview(file.url);
+      return;
+    }
+
+    if (file.originFileObj) {
+      try {
+        setIsLogoLoading(true);
+        const preview = await convertFileToBase64(file.originFileObj as File);
+        setLogoPreview(preview);
+      } catch {
+        messageApi.error("Failed to preview logo");
+      } finally {
+        setIsLogoLoading(false);
+      }
+    }
   };
 
   const handleSubmit = async (values: CafeFormValues) => {
@@ -140,6 +175,13 @@ const CafeForm: React.FC = () => {
 
   const handleCancel = () => {
     navigate("/cafes");
+  };
+
+  const handleRemoveLogo = () => {
+    form.setFieldValue("logo", undefined);
+    setLogoPreview(undefined);
+    setIsLogoLoading(false);
+    setIsDirty(true);
   };
 
   return (
@@ -205,7 +247,11 @@ const CafeForm: React.FC = () => {
                     return Promise.resolve();
                   }
                   const file = fileList[0];
-                  const isLt2M = file.size / 1024 / 1024 < 2;
+                  const size =
+                    (file.originFileObj as File | undefined)?.size ??
+                    file.size ??
+                    0;
+                  const isLt2M = size / 1024 / 1024 < 2;
                   if (!isLt2M) {
                     return Promise.reject(
                       new Error("Logo must be smaller than 2MB")
@@ -220,9 +266,43 @@ const CafeForm: React.FC = () => {
               maxCount={1}
               beforeUpload={() => false}
               accept="image/*"
-              listType="picture"
+              listType="picture-card"
+              showUploadList={false}
+              onChange={handleLogoChange}
             >
-              <Button icon={<UploadOutlined />}>Click to Upload</Button>
+              {logoPreview ? (
+                <div style={{ position: "relative" }}>
+                  <img
+                    src={logoPreview}
+                    alt="logo"
+                    style={{ width: "100%" }}
+                    draggable={false}
+                  />
+                  <Button
+                    type="text"
+                    size="small"
+                    icon={<CloseCircleFilled style={{ fontSize: 20 }} />}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      event.stopPropagation();
+                      handleRemoveLogo();
+                    }}
+                    style={{
+                      top: -10,
+                      right: 4,
+                      color: "#000000ff",
+                      padding: 0,
+                      lineHeight: 1,
+                      position: "absolute",
+                    }}
+                  />
+                </div>
+              ) : (
+                <div>
+                  {isLogoLoading ? <LoadingOutlined /> : <PlusOutlined />}
+                  <div style={{ marginTop: 8 }}>Upload</div>
+                </div>
+              )}
             </Upload>
           </Form.Item>
 
