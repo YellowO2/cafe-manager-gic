@@ -2,16 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  Form,
-  Input,
-  Button,
-  message,
-  Space,
-  Radio,
-  Select,
-  DatePicker,
-} from "antd";
+import { Form, Button, message, Space, Radio, Select, DatePicker } from "antd";
 import {
   getEmployee,
   createEmployee,
@@ -21,6 +12,7 @@ import { getCafes } from "../../api/cafes";
 import type { EmployeeFormData } from "../../types";
 import dayjs from "dayjs";
 import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
+import { FormTextField } from "../../components/FormTextField";
 
 type EmployeeFormValues = Omit<EmployeeFormData, "start_date"> & {
   start_date?: dayjs.Dayjs | null;
@@ -100,7 +92,6 @@ const EmployeeForm: React.FC = () => {
       messageApi.success("Employee updated successfully");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       setIsDirty(false); // Reset dirty state on success
-      navigate("/employees");
     },
     onError: (error: Error) => {
       messageApi.error(`Failed to update employee: ${error.message}`);
@@ -153,41 +144,36 @@ const EmployeeForm: React.FC = () => {
           start_date: null,
         }}
       >
-        <Form.Item
+        <FormTextField
           label="Name"
           name="name"
-          rules={[
-            { required: true, message: "Please enter employee name" },
-            { min: 6, message: "Name must be at least 6 characters" },
-            { max: 10, message: "Name must not exceed 10 characters" },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
+          placeholder="Enter employee name"
+          required
+          minLength={6}
+          maxLength={10}
+        />
+
+        <FormTextField
           label="Email Address"
           name="email_address"
-          rules={[
-            { required: true, message: "Please enter email address" },
-            { type: "email", message: "Please enter a valid email address" },
-          ]}
-        >
-          <Input type="email" />
-        </Form.Item>
-        <Form.Item
+          placeholder="Enter email address"
+          type="email"
+          required
+        />
+
+        <FormTextField
           label="Phone Number"
           name="phone_number"
-          rules={[
-            { required: true, message: "Please enter phone number" },
+          placeholder="Enter phone number"
+          required
+          customRules={[
             {
               pattern: /^[89]\d{7}$/,
               message:
                 "Please enter an 8-digit SG phone number starting with 8 or 9",
             },
           ]}
-        >
-          <Input />
-        </Form.Item>
+        />
 
         <Form.Item
           label="Gender"

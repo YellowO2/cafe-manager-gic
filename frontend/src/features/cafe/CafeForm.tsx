@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Form, Input, Button, message, Space, Upload } from "antd";
+import { Form, Button, message, Space, Upload } from "antd";
 import {
   CloseCircleFilled,
   LoadingOutlined,
@@ -11,8 +11,8 @@ import type { UploadChangeParam, UploadFile } from "antd/es/upload/interface";
 import { getCafe, createCafe, updateCafe } from "../../api/cafes";
 import type { CafeFormData } from "../../types";
 import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
-
-const { TextArea } = Input;
+import { convertFileToBase64 } from "../../utils/fileUtils";
+import { FormTextField } from "../../components/FormTextField";
 
 type CafeFormValues = Omit<CafeFormData, "logo"> & { logo?: UploadFile[] };
 
@@ -77,6 +77,7 @@ const CafeForm: React.FC = () => {
   }, [isEditMode, cafeData, form]);
 
   const [messageApi, messageContextHolder] = message.useMessage();
+
   // Create mutation
   const createMutation = useMutation({
     mutationFn: createCafe,
@@ -103,15 +104,6 @@ const CafeForm: React.FC = () => {
       messageApi.error(`Failed to update café: ${error.message}`);
     },
   });
-
-  const convertFileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-    });
-  };
 
   const handleLogoChange = async (
     info: UploadChangeParam<UploadFile>
@@ -198,36 +190,24 @@ const CafeForm: React.FC = () => {
           onValuesChange={handleValuesChange}
           autoComplete="off"
         >
-          <Form.Item
+          <FormTextField
             label="Name"
             name="name"
-            rules={[
-              { required: true, message: "Please enter café name" },
-              { min: 6, message: "Name must be at least 6 characters" },
-              { max: 10, message: "Name must not exceed 10 characters" },
-            ]}
-          >
-            <Input placeholder="Enter café name" />
-          </Form.Item>
+            placeholder="Enter café name"
+            required
+            minLength={6}
+            maxLength={10}
+          />
 
-          <Form.Item
+          <FormTextField
             label="Description"
             name="description"
-            rules={[
-              { required: true, message: "Please enter description" },
-              {
-                max: 256,
-                message: "Description must not exceed 256 characters",
-              },
-            ]}
-          >
-            <TextArea
-              rows={4}
-              placeholder="Enter café description"
-              showCount
-              maxLength={256}
-            />
-          </Form.Item>
+            placeholder="Enter café description"
+            type="textarea"
+            required
+            maxLength={256}
+            showCount
+          />
 
           <Form.Item
             label="Logo"
@@ -306,13 +286,12 @@ const CafeForm: React.FC = () => {
             </Upload>
           </Form.Item>
 
-          <Form.Item
+          <FormTextField
             label="Location"
             name="location"
-            rules={[{ required: true, message: "Please enter location" }]}
-          >
-            <Input placeholder="Enter location" />
-          </Form.Item>
+            placeholder="Enter location"
+            required
+          />
 
           <Form.Item>
             <Space>

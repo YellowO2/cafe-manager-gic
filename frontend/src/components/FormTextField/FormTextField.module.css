@@ -1,0 +1,16 @@
+.formTextField :global(.ant-input),
+.formTextField :global(.ant-input-textarea) {
+  border-radius: 6px;
+  transition: all 0.3s ease;
+}
+
+.formTextField :global(.ant-input:focus),
+.formTextField :global(.ant-input-textarea:focus) {
+  border-color: #1890ff;
+  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
+}
+
+.formTextField :global(.ant-input:hover),
+.formTextField :global(.ant-input-textarea:hover) {
+  border-color: #40a9ff;
+}
