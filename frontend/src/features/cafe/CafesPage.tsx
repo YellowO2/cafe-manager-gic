@@ -40,8 +40,30 @@ const CafesPage: React.FC = () => {
     },
     { field: "name", headerName: "Name", flex: 1 },
     { field: "description", headerName: "Description", flex: 2 },
-    { field: "location", headerName: "Location", flex: 1 },
-    { field: "employees", headerName: "Employees", width: 120 },
+    {
+      field: "location",
+      headerName: "Location",
+      flex: 1,
+      filter: true, // Enable filtering
+    },
+    {
+      field: "employees",
+      headerName: "Employees",
+      width: 120,
+      cellRenderer: (params: ICellRendererParams<Cafe>) => {
+        if (!params.data) return null;
+
+        return (
+          <Button
+            type="link"
+            onClick={() => navigate(`/employees?cafe=${params.data?.id}`)}
+            style={{ padding: 0 }}
+          >
+            {params.value}
+          </Button>
+        );
+      },
+    },
     {
       headerName: "Actions",
       cellRenderer: (params: ICellRendererParams<Cafe>) => {

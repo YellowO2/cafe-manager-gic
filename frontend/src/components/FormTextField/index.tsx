@@ -31,10 +31,8 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
   maxLength,
   type = "text",
   rows = 4,
-  showCount = false,
   tooltip,
   disabled = false,
-  customRules = [],
 }) => {
   // Build validation rules based on props
   const rules: Rule[] = [];
@@ -67,13 +65,10 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
     });
   }
 
-  // Merge with custom rules
-  const allRules = [...rules, ...customRules];
-
   const formItemProps: FormItemProps = {
     label,
     name,
-    rules: allRules,
+    rules: rules,
     className: styles.formTextField,
   };
 
@@ -85,14 +80,15 @@ export const FormTextField: React.FC<FormTextFieldProps> = ({
     <Form.Item {...formItemProps}>
       {type === "textarea" ? (
         <TextArea
+          showCount={maxLength ? true : false}
           rows={rows}
           placeholder={placeholder}
-          showCount={showCount}
           maxLength={maxLength}
           disabled={disabled}
         />
       ) : (
         <Input
+          showCount={maxLength ? true : false}
           type={type}
           placeholder={placeholder}
           disabled={disabled}

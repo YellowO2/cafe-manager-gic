@@ -21,7 +21,7 @@ export class EmployeesController {
     return this.employeesService.create(createEmployeeDto);
   }
 
-  @Get()
+  @Get() //finds all employees, optionally filtered by cafe id
   findAll(@Query('cafe') cafe_id?: string) {
     return this.employeesService.findAll(cafe_id);
   }

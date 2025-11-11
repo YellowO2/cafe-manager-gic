@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef, ICellRendererParams } from "ag-grid-community";
 import type { Employee } from "../../types";
@@ -11,14 +11,16 @@ import TableActionCell from "../../components/TableActionCell";
 
 const EmployeesPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const cafeId = searchParams.get("cafe");
 
   const {
     data: employees,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["employees"],
-    queryFn: () => getEmployees(),
+    queryKey: ["employees", cafeId],
+    queryFn: () => getEmployees(cafeId ?? undefined),
   });
 
   const handleAddNew = () => {
