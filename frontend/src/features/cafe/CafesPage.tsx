@@ -9,6 +9,7 @@ import { Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import TableActionCell from "../../components/TableActionCell";
 import { deleteCafe } from "../../api/cafes";
+import PageHeader from "../../components/PageHeader";
 
 const LogoRenderer = (props: { value: string }) => {
   if (!props.value) return null; // Handle cases where there's no logo
@@ -52,17 +53,23 @@ const CafesPage: React.FC = () => {
       width: 120,
       cellRenderer: (params: ICellRendererParams<Cafe>) => {
         if (!params.data) return null;
+        const { id, name } = params.data;
 
         return (
           <Button
             type="link"
-            onClick={() => navigate(`/employees?cafe=${params.data?.id}`)}
+            onClick={() =>
+              navigate(
+                `/employees?cafe=${id}&cafeName=${encodeURIComponent(name)}`
+              )
+            }
             style={{ padding: 0 }}
           >
             {params.value}
           </Button>
         );
       },
+      filter: true,
     },
     {
       headerName: "Actions",
@@ -90,16 +97,19 @@ const CafesPage: React.FC = () => {
 
   return (
     <div>
-      <div style={{ marginBottom: 16 }}>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={handleAddNew}
-          size="large"
-        >
-          Add New Café
-        </Button>
-      </div>
+      <PageHeader
+        title="Cafés"
+        actions={
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={handleAddNew}
+            size="large"
+          >
+            Add New Café
+          </Button>
+        }
+      />
       <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
         <AgGridReact<Cafe> rowData={cafes} columnDefs={columnDefs} />
       </div>

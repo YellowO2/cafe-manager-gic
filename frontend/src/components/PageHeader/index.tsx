@@ -3,7 +3,7 @@ import styles from "./PageHeader.module.css";
 
 interface PageHeaderProps {
   title: string;
-  actions?: React.ReactNode; // A place to put buttons or other action elements
+  actions?: React.ReactNode; // A place to put action elements like create button
 }
 
 const PageHeader: React.FC<PageHeaderProps> = ({ title, actions }) => {
