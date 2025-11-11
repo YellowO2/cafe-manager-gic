@@ -41,16 +41,17 @@ const PageLayout = () => {
         }}
       >
         {/* Logo/App Name */}
-        <div
+        <Link
           style={{
             fontSize: "20px",
             fontWeight: "700",
             color: "#1890ff",
             marginRight: "48px",
           }}
+          to="/"
         >
           Café Manager
-        </div>
+        </Link>
 
         {/* Navigation Menu */}
         <Menu

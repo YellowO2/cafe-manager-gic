@@ -30,7 +30,7 @@ const EmployeesPage: React.FC = () => {
   };
 
   const columnDefs: ColDef<Employee>[] = [
-    { field: "id", headerName: "Employee ID", width: 120 },
+    { field: "id", headerName: "Employee ID", flex: 1 },
     { field: "name", headerName: "Name", flex: 1, filter: true },
     { field: "email_address", headerName: "Email Address", flex: 1 },
     { field: "phone_number", headerName: "Phone Number", flex: 1 },
