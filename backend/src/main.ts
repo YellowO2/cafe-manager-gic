@@ -9,13 +9,6 @@ async function bootstrap() {
     origin: process.env.CORS_ORIGIN, // Read from environment variable
   });
 
-  app.use((req, res, next) => {
-    console.log(
-      `[${req.method}] ${req.url}: ${req.body ? JSON.stringify(req.body) : ''}`,
-    );
-    next();
-  });
-
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();

@@ -40,7 +40,7 @@ services:
       postgres:
         condition: service_healthy
     command: >
-      sh -c "npx prisma migrate reset --force --skip-seed &&
+      sh -c "npx prisma migrate deploy &&
              node dist/prisma/seed.js &&
              node dist/main"
 
