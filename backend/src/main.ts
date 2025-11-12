@@ -6,7 +6,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(new ValidationPipe()); // for DTO validation
   app.enableCors({
-    origin: 'http://localhost:5173', // Only allows your frontend
+    origin: process.env.CORS_ORIGIN, // Read from environment variable
   });
 
   app.use((req, res, next) => {

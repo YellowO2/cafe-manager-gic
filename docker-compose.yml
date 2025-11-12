@@ -6,11 +6,13 @@ services:
     container_name: cafe-db
     restart: always
     environment:
+    # For local demo and not secrets
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: cafe_db
-    ports:
-      - '5432:5432'
+    # Commented out for deployment, enable if local access is needed
+    # ports: 
+    #   - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -32,7 +34,8 @@ services:
       DATABASE_URL: postgresql://user:password@postgres:5432/cafe_db
       NODE_ENV: production
       PORT: 3000
-      CORS_ORIGIN: http://localhost
+      # Will be overridden in production deployment
+      CORS_ORIGIN: http://localhost:5173
     depends_on:
       postgres:
         condition: service_healthy
@@ -42,18 +45,19 @@ services:
              node dist/main"
 
   # React Frontend (Vite + Nginx)
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   container_name: cafe-frontend
-  #   restart: always
-  #   ports:
-  #     - '80:80'
-  #   environment:
-  #     VITE_API_URL: http://localhost:3000
-  #   depends_on:
-  #     - backend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Will be overridden in production deployment
+        VITE_API_BASE_URL: http://localhost:3000
+    container_name: cafe-frontend
+    restart: always
+    ports:
+      - '5173:8080'
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
