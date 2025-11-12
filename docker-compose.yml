@@ -1,5 +1,6 @@
 
 services:
+  # PostgreSQL Database
   postgres:
     image: postgres:13
     container_name: cafe-db
@@ -12,6 +13,47 @@ services:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d cafe_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # NestJS Backend API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cafe-backend
+    restart: always
+    ports:
+      - '3000:3000'
+    environment:
+      DATABASE_URL: postgresql://user:password@postgres:5432/cafe_db
+      NODE_ENV: production
+      PORT: 3000
+      CORS_ORIGIN: http://localhost
+    depends_on:
+      postgres:
+        condition: service_healthy
+    command: >
+      sh -c "npx prisma migrate reset --force --skip-seed &&
+             node dist/prisma/seed.js &&
+             node dist/main"
+
+  # React Frontend (Vite + Nginx)
+  # frontend:
+  #   build:
+  #     context: ./frontend
+  #     dockerfile: Dockerfile
+  #   container_name: cafe-frontend
+  #   restart: always
+  #   ports:
+  #     - '80:80'
+  #   environment:
+  #     VITE_API_URL: http://localhost:3000
+  #   depends_on:
+  #     - backend
 
 volumes:
   postgres_data:
