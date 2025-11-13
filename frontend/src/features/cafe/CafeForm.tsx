@@ -213,7 +213,6 @@ const CafeForm: React.FC = () => {
             type="textarea"
             required
             maxLength={256}
-            showCount
           />
 
           <Form.Item

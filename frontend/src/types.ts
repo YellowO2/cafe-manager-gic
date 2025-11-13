@@ -25,7 +25,7 @@ export interface Employee {
 }
 
 // ======== What the employee data that sends to backend look like===========
-type Gender = "male" | "female" | "other";
+type Gender = "male" | "female";
 
 export interface EmployeeFormData {
   name: string;

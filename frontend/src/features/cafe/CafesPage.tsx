@@ -6,7 +6,7 @@ import { AgGridReact } from "ag-grid-react";
 import type { ColDef, ICellRendererParams } from "ag-grid-community";
 import type { Cafe } from "../../types";
 import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import TableActionCell from "../../components/TableActionCell";
 import { deleteCafe } from "../../api/cafes";
 import PageHeader from "../../components/PageHeader";
@@ -91,7 +91,12 @@ const CafesPage: React.FC = () => {
     },
   ];
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <LoadingOutlined />
+      </div>
+    );
   if (error) return <div>An error occurred: {(error as Error).message}</div>;
 
   return (
@@ -104,7 +109,7 @@ const CafesPage: React.FC = () => {
           </Button>
         }
       />
-      <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
+      <div style={{ height: 500, width: "100%" }}>
         <AgGridReact<Cafe>
           rowData={cafes}
           columnDefs={columnDefs}

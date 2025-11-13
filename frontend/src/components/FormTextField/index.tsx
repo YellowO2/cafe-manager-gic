@@ -15,7 +15,6 @@ interface FormTextFieldProps {
   maxLength?: number;
   type?: "text" | "email" | "textarea";
   rows?: number; // For textarea
-  showCount?: boolean; // For textarea
   tooltip?: string;
   disabled?: boolean;
   // Allow custom rules to be passed in addition to auto-generated ones

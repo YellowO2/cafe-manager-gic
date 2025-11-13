@@ -5,7 +5,7 @@ import { AgGridReact } from "ag-grid-react";
 import type { ColDef, ICellRendererParams } from "ag-grid-community";
 import type { Employee } from "../../types";
 import { Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { deleteEmployee, getEmployees } from "../../api/employees";
 import TableActionCell from "../../components/TableActionCell";
 import PageHeader from "../../components/PageHeader";
@@ -66,7 +66,12 @@ const EmployeesPage: React.FC = () => {
     },
   ];
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <LoadingOutlined />
+      </div>
+    );
   if (error) return <div>An error occurred: {(error as Error).message}</div>;
 
   // Build page title
@@ -82,7 +87,7 @@ const EmployeesPage: React.FC = () => {
           </Button>
         }
       />
-      <div className="ag-theme-alpine" style={{ height: 500, width: "100%" }}>
+      <div style={{ height: 500, width: "100%" }}>
         <AgGridReact<Employee>
           rowData={employees}
           columnDefs={columnDefs}
