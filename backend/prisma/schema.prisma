@@ -22,7 +22,7 @@ model Employee {
 
 model Cafe {
   id          String     @id @default(uuid())
-  name        String
+  name        String     @unique
   description String
   logo        String?
   location    String

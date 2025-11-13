@@ -53,15 +53,13 @@ const CafesPage: React.FC = () => {
       width: 120,
       cellRenderer: (params: ICellRendererParams<Cafe>) => {
         if (!params.data) return null;
-        const { id, name } = params.data;
+        const { name } = params.data;
 
         return (
           <Button
             type="link"
             onClick={() =>
-              navigate(
-                `/employees?cafe=${id}&cafeName=${encodeURIComponent(name)}`
-              )
+              navigate(`/employees?cafe=${encodeURIComponent(name)}`)
             }
             style={{ padding: 0 }}
           >

@@ -10,9 +10,8 @@ services:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: cafe_db
-    # Commented out for deployment, enable if local access is needed
-    # ports: 
-    #   - '5432:5432'
+    ports: 
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

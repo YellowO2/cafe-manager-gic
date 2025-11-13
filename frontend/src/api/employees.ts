@@ -4,9 +4,9 @@ import type { Employee, EmployeeFormData } from "../types";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // connect to backend employees api
-export const getEmployees = async (cafeId?: string): Promise<Employee[]> => {
+export const getEmployees = async (cafeName?: string): Promise<Employee[]> => {
   const response = await axios.get(`${API_BASE_URL}/employees`, {
-    params: { cafe: cafeId },
+    params: { cafe: cafeName },
   });
   return response.data;
 };

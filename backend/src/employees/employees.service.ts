@@ -27,7 +27,21 @@ export class EmployeesService {
     });
   }
 
-  async findAll(cafeId?: string) {
+  async findAll(cafeName?: string) {
+    // If cafe name is provided, find the cafe first
+    let cafeId: string | undefined;
+    if (cafeName) {
+      const cafe = await this.prisma.cafe.findUnique({
+        where: { name: cafeName },
+      });
+
+      if (!cafe) {
+        return []; // Return empty array if cafe not found
+      }
+
+      cafeId = cafe.id;
+    }
+
     const employees = await this.prisma.employee.findMany({
       where: cafeId ? { cafeId: cafeId } : {},
       include: {

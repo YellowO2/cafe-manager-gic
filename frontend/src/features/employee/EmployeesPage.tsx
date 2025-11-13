@@ -13,16 +13,15 @@ import PageHeader from "../../components/PageHeader";
 const EmployeesPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const cafeId = searchParams.get("cafe");
-  const cafeName = searchParams.get("cafeName");
+  const cafeName = searchParams.get("cafe");
 
   const {
     data: employees,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["employees", cafeId],
-    queryFn: () => getEmployees(cafeId ?? undefined),
+    queryKey: ["employees", cafeName],
+    queryFn: () => getEmployees(cafeName ?? undefined),
   });
 
   const handleAddNew = () => {
