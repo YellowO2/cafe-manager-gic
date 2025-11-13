@@ -14,6 +14,7 @@ import dayjs from "dayjs";
 import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
 import { FormTextField } from "../../components/FormTextField";
 import PageHeader from "../../components/PageHeader";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 type EmployeeFormValues = Omit<EmployeeFormData, "start_date"> & {
   start_date?: dayjs.Dayjs | null;
@@ -79,8 +80,8 @@ const EmployeeForm: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       setIsDirty(false); // Reset dirty state on success
     },
-    onError: (error: Error) => {
-      messageApi.error(`Failed to create employee: ${error.message}`);
+    onError: (error) => {
+      messageApi.error(getErrorMessage(error));
     },
   });
 
@@ -93,8 +94,8 @@ const EmployeeForm: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       setIsDirty(false); // Reset dirty state on success
     },
-    onError: (error: Error) => {
-      messageApi.error(`Failed to update employee: ${error.message}`);
+    onError: (error) => {
+      messageApi.error(getErrorMessage(error));
     },
   });
 

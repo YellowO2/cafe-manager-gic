@@ -14,6 +14,7 @@ import { useFormNavigationBlocker } from "../../hooks/useFormNavigationBlocker";
 import { convertFileToBase64 } from "../../utils/fileUtils";
 import { FormTextField } from "../../components/FormTextField";
 import PageHeader from "../../components/PageHeader";
+import { getErrorMessage } from "../../utils/errorHandler";
 
 type CafeFormValues = Omit<CafeFormData, "logo"> & { logo?: UploadFile[] };
 
@@ -87,8 +88,8 @@ const CafeForm: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
       setIsDirty(false); // Reset dirty state on success
     },
-    onError: (error: Error) => {
-      messageApi.error(`Failed to create café: ${error.message}`);
+    onError: (error) => {
+      messageApi.error(getErrorMessage(error));
     },
   });
 
@@ -101,8 +102,8 @@ const CafeForm: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
       setIsDirty(false); // Reset dirty state on success
     },
-    onError: (error: Error) => {
-      messageApi.error(`Failed to update café: ${error.message}`);
+    onError: (error) => {
+      messageApi.error(getErrorMessage(error));
     },
   });
 

@@ -68,7 +68,6 @@ const CafesPage: React.FC = () => {
         );
       },
       flex: 1,
-      filter: true,
     },
     {
       headerName: "Actions",
@@ -95,7 +94,9 @@ const CafesPage: React.FC = () => {
     return (
       <Spin
         style={{ marginTop: 64, width: "100%" }}
-        indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />}
+        indicator={
+          <LoadingOutlined style={{ fontSize: 32, color: "#bcdbf7ff" }} spin />
+        }
       />
     );
   if (error)
