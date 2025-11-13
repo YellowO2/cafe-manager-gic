@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0%" stop-color="#8B5E3C"/>
+      <stop offset="100%" stop-color="#5A3824"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="48" ry="48" fill="#111827"/>
+  <g transform="translate(28,40)">
+    <!-- cup -->
+    <path d="M20 40 h120 a8 8 0 0 1 8 8 v56 a40 40 0 0 1 -40 40 h-56 a40 40 0 0 1 -40 -40 v-56 a8 8 0 0 1 8 -8 z" fill="url(#g)"/>
+    <!-- handle -->
+    <path d="M156 64 a28 28 0 1 1 0 56 v-12 a16 16 0 1 0 0 -32 z" fill="#8B5E3C"/>
+    <!-- coffee surface -->
+    <rect x="20" y="40" width="120" height="12" rx="6" fill="#3B2618"/>
+    <!-- steam -->
+    <path d="M52 16 c0 -8 10 -8 10 -16 s-10 -8 -10 -16" stroke="#E5E7EB" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <path d="M84 20 c0 -8 10 -8 10 -16 s-10 -8 -10 -16" stroke="#E5E7EB" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+</svg>

@@ -33,7 +33,17 @@ const EmployeesPage: React.FC = () => {
     { field: "name", headerName: "Name", flex: 1, filter: true },
     { field: "email_address", headerName: "Email Address", flex: 1 },
     { field: "phone_number", headerName: "Phone Number", flex: 1 },
-    { field: "days_worked", headerName: "Days Worked", flex: 1 },
+    {
+      field: "days_worked",
+      headerName: "Days Worked",
+      flex: 1,
+      valueFormatter: (params) => {
+        const v = params.value as number | null | undefined;
+        if (v == null) return "";
+        if (v < 0) return `Starts in ${Math.abs(v)} days`;
+        return `${v}`;
+      },
+    },
     { field: "cafe", headerName: "Café", flex: 1, filter: true },
     {
       headerName: "Actions",
