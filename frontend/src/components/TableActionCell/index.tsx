@@ -25,7 +25,6 @@ const ActionsRenderer: React.FC<ActionsRendererProps> = (props) => {
     navigate(`${props.editPath}/${id}`);
   };
 
-  // Delete mutation - now uses the passed deleteFn
   const deleteMutation = useMutation({
     mutationFn: props.deleteFn,
     onSuccess: () => {
@@ -65,12 +64,14 @@ const ActionsRenderer: React.FC<ActionsRendererProps> = (props) => {
           type="primary"
           icon={<EditOutlined />}
           size="small"
+          aria-label={`Edit ${props.data.name}`}
           onClick={() => handleEdit(props.data.id)}
         ></Button>
         <Button
           danger
           icon={<DeleteOutlined />}
           size="small"
+          aria-label={`Delete ${props.data.name}`}
           onClick={() => handleDelete(props.data.id, props.data.name)}
         ></Button>
       </Space>

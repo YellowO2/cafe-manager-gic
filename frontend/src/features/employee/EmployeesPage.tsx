@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef, ICellRendererParams } from "ag-grid-community";
 import type { Employee } from "../../types";
-import { Button } from "antd";
+import { Alert, Button, Spin } from "antd";
 import { PlusOutlined, LoadingOutlined } from "@ant-design/icons";
 import { deleteEmployee, getEmployees } from "../../api/employees";
 import TableActionCell from "../../components/TableActionCell";
@@ -68,11 +68,21 @@ const EmployeesPage: React.FC = () => {
 
   if (isLoading)
     return (
-      <div>
-        <LoadingOutlined />
-      </div>
+      <Spin
+        style={{ marginTop: 64, width: "100%" }}
+        indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />}
+      />
     );
-  if (error) return <div>An error occurred: {(error as Error).message}</div>;
+  if (error)
+    return (
+      <Alert
+        style={{ marginTop: 24 }}
+        type="error"
+        showIcon
+        message="Failed to load employees"
+        description={(error as Error).message}
+      />
+    );
 
   // Build page title
   const pageTitle = cafeName ? `Employees of Cafe ${cafeName}` : "Employees";

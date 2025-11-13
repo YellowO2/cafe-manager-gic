@@ -5,7 +5,7 @@ import { getCafes } from "../../api/cafes";
 import { AgGridReact } from "ag-grid-react";
 import type { ColDef, ICellRendererParams } from "ag-grid-community";
 import type { Cafe } from "../../types";
-import { Button } from "antd";
+import { Alert, Button, Spin } from "antd";
 import { LoadingOutlined, PlusOutlined } from "@ant-design/icons";
 import TableActionCell from "../../components/TableActionCell";
 import { deleteCafe } from "../../api/cafes";
@@ -93,11 +93,21 @@ const CafesPage: React.FC = () => {
 
   if (isLoading)
     return (
-      <div>
-        <LoadingOutlined />
-      </div>
+      <Spin
+        style={{ marginTop: 64, width: "100%" }}
+        indicator={<LoadingOutlined style={{ fontSize: 32 }} spin />}
+      />
     );
-  if (error) return <div>An error occurred: {(error as Error).message}</div>;
+  if (error)
+    return (
+      <Alert
+        style={{ marginTop: 24 }}
+        type="error"
+        showIcon
+        message="Failed to load cafés"
+        description={(error as Error).message}
+      />
+    );
 
   return (
     <div>
