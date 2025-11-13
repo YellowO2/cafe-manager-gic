@@ -45,4 +45,4 @@ COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
 EXPOSE 3000
 
 # Start the application
-CMD ["node", "dist/main"]
+CMD ["/bin/sh", "-c", "npx prisma migrate deploy && node dist/prisma/seed.js && node dist/main"]

@@ -34,15 +34,11 @@ services:
       DATABASE_URL: postgresql://user:password@postgres:5432/cafe_db
       NODE_ENV: production
       PORT: 3000
-      # Will be overridden in production deployment
+      # Will be replaced with actual frontend url during deployment
       CORS_ORIGIN: http://localhost:5173
     depends_on:
       postgres:
         condition: service_healthy
-    command: >
-      sh -c "npx prisma migrate deploy &&
-             node dist/prisma/seed.js &&
-             node dist/main"
 
   # React Frontend (Vite + Nginx)
   frontend:
