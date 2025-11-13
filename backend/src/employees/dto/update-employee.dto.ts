@@ -9,11 +9,9 @@ import {
   IsDateString,
 } from 'class-validator';
 
-class UpdateEmployeeBaseDto extends PartialType(
+export class UpdateEmployeeDto extends PartialType(
   OmitType(CreateEmployeeDto, ['cafeId', 'start_date'] as const),
-) {}
-
-export class UpdateEmployeeDto extends UpdateEmployeeBaseDto {
+) {
   @ValidateIf(
     (o: UpdateEmployeeDto) => o.start_date !== undefined || o.cafeId === null,
   )

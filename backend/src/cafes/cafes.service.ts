@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCafeDto } from './dto/create-cafe.dto';
 import { UpdateCafeDto } from './dto/update-cafe.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -29,21 +29,28 @@ export class CafesService {
     });
   }
 
-  // id as in uuid
-  findOne(id: string) {
-    return this.prisma.cafe.findUnique({
+  async findOne(id: string) {
+    const cafe = await this.prisma.cafe.findUnique({
       where: { id },
     });
+
+    if (!cafe) {
+      throw new NotFoundException(`Cafe with ID "${id}" not found.`);
+    }
+
+    return cafe;
   }
 
-  update(id: string, updateCafeDto: UpdateCafeDto) {
+  async update(id: string, updateCafeDto: UpdateCafeDto) {
+    await this.findOne(id); // Check if cafe exists
     return this.prisma.cafe.update({
       where: { id },
       data: updateCafeDto,
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    await this.findOne(id); // Check if cafe exists
     return this.prisma.cafe.delete({
       where: { id },
     });

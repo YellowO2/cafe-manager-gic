@@ -7,22 +7,22 @@ import {
 } from 'class-validator';
 
 export class CreateCafeDto {
-  @IsString()
-  @IsNotEmpty()
-  @MinLength(6)
-  @MaxLength(10)
+  @IsString({ message: 'Cafe name must be a string.' })
+  @IsNotEmpty({ message: 'Cafe name is required.' })
+  @MinLength(6, { message: 'Cafe name must be at least 6 characters long.' })
+  @MaxLength(10, { message: 'Cafe name must not exceed 10 characters.' })
   name: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(256)
+  @IsString({ message: 'Description must be a string.' })
+  @IsNotEmpty({ message: 'Description is required.' })
+  @MaxLength(256, { message: 'Description must not exceed 256 characters.' })
   description: string;
 
-  @IsString()
-  @IsNotEmpty()
+  @IsString({ message: 'Location must be a string.' })
+  @IsNotEmpty({ message: 'Location is required.' })
   location: string;
 
-  @IsString()
+  @IsString({ message: 'Logo must be a string.' })
   @IsOptional()
   logo?: string;
 }
