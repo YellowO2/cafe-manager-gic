@@ -120,7 +120,7 @@ const CafesPage: React.FC = () => {
           </Button>
         }
       />
-      <div style={{ height: 500, width: "100%" }}>
+      <div style={{ height: 450, width: "100%" }}>
         <AgGridReact<Cafe>
           rowData={cafes}
           columnDefs={columnDefs}

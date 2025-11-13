@@ -97,7 +97,7 @@ const EmployeesPage: React.FC = () => {
           </Button>
         }
       />
-      <div style={{ height: 500, width: "100%" }}>
+      <div style={{ height: 450, width: "100%" }}>
         <AgGridReact<Employee>
           rowData={employees}
           columnDefs={columnDefs}
