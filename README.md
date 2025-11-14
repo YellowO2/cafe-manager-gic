@@ -2,15 +2,13 @@
 
 Full-stack implementing a café and employee manager with NestJS, PostgreSQL, and a React frontend.
 
+- Frontend: React (Vite), Ant Design, AG Grid, TanStack Query, React Router, Day.js, TypeScript
+- Backend: NestJS (Node 22), Prisma ORM, PostgreSQL
+
 ## Links
 
 - Live App: https://cafe-manager-gic-frontend.onrender.com
 - Deployed Backend: https://cafe-manager-gic-backend.onrender.com
-
-## Tech Stack
-
-- Frontend: React (Vite), Ant Design, AG Grid, TanStack Query, React Router, Day.js, TypeScript
-- Backend: NestJS (Node 22), Prisma ORM, PostgreSQL
 
 ## Running locally 
 
@@ -58,9 +56,9 @@ docker compose up -d postgres
 
 ### Backend (NestJS + Prisma)
 
-<table>
+<table width="100%">
 <tr>
-<td width="40%">
+<td width="30%" valign="top">
 
 **Folder Structure**
 
@@ -68,47 +66,44 @@ docker compose up -d postgres
 backend/
 ├── src/
 │   ├── cafes/
-│   │   ├── cafes.controller.ts
-│   │   ├── cafes.service.ts
+│   │   ├── controller
+│   │   ├── service
 │   │   └── dto/
 │   ├── employees/
-│   │   ├── employees.controller.ts
-│   │   ├── employees.service.ts
+│   │   ├── controller
+│   │   ├── service
 │   │   └── dto/
 │   └── prisma/
-│       ├── prisma.service.ts
-│       └── prisma.module.ts
+│       ├── service
+│       └── module
 └── prisma/
-    ├── schema.prisma
+    ├── schema
     └── migrations/
 ```
 
 </td>
-<td width="60%">
+<td>
 
-**Architecture**
+**Diagram**
 
 ```mermaid
-graph TB
-    subgraph Backend
-        subgraph EmployeesModule
-            EmpController[EmployeesController]
-            EmpService[EmployeesService]
-            EmpController --> EmpService
-        end
-        
-        subgraph CafesModule
-            CafeController[CafesController]
-            CafeService[CafesService]
-            CafeController --> CafeService
-        end
-        
-        PrismaService[PrismaService]
-        
-        EmpService --> PrismaService
-        CafeService --> PrismaService
+graph LR
+    subgraph EmployeesModule
+        EmpC[Controller]
+        EmpS[Service]
+        EmpC --> EmpS
     end
     
+    subgraph CafesModule
+        CafeC[Controller]
+        CafeS[Service]
+        CafeC --> CafeS
+    end
+    
+    PrismaService[PrismaService]
+    
+    EmpS --> PrismaService
+    CafeS --> PrismaService
     PrismaService --> DB[(PostgreSQL)]
 ```
 
@@ -116,11 +111,11 @@ graph TB
 </tr>
 </table>
 
-### Frontend (React + Vite)
+### Frontend
 
-<table>
+<table width="100%">
 <tr>
-<td width="40%">
+<td width="30%">
 
 **Folder Structure**
 
@@ -130,7 +125,7 @@ frontend/
     ├── api/
     │   # API client
     ├── features/
-    │   # Main pages
+    │   # Pages
     ├── components/
     │   # Reusable UI
     └── hooks/
@@ -138,36 +133,15 @@ frontend/
 ```
 
 </td>
-<td width="60%">
+<td>
 
-**Architecture**
+**Diagram**
 
 ```mermaid
-graph TB
-    subgraph Frontend
-        subgraph Features
-            CafePage[CafesPage]
-            EmployeePage[EmployeesPage]
-            CafeForm[CafeForm]
-            EmployeeForm[EmployeeForm]
-        end
-        
-        subgraph Components
-            FormTextField
-            PageHeader
-            TableActionCell
-        end
-        
-        subgraph API
-            CafesAPI[cafes.ts]
-            EmployeesAPI[employees.ts]
-        end
-        
-        Features --> API
-        Features --> Components
-    end
-    
-    API -->|REST HTTP| BackendAPI[Backend API]
+graph LR
+    Pages["<b>Pages</b><br/>CafesPage<br/>EmployeesPage<br/>Forms"] --> API["<b>API Layer</b><br/>cafes.ts<br/>employees.ts"]
+    Pages --> Components["<b>Components</b><br/>FormTextField<br/>PageHeader<br/>TableActionCell"]
+    API -->|REST HTTP| Backend[Backend API]
 ```
 
 </td>
