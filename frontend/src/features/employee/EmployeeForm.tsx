@@ -1,6 +1,6 @@
 // Contains the form for adding/editing employees, similar to CafeForm.tsx
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Form, Button, message, Space, Radio, Select, DatePicker } from "antd";
 import {
@@ -26,6 +26,8 @@ const EmployeeForm: React.FC = () => {
   const queryClient = useQueryClient();
   const [form] = Form.useForm<EmployeeFormValues>();
   const isEditMode = !!id;
+  const [searchParams] = useSearchParams();
+  const preselectedCafeName = searchParams.get("cafe");
   const [initialValues, setInitialValues] = useState<EmployeeFormValues | null>(
     null
   );
@@ -76,9 +78,17 @@ const EmployeeForm: React.FC = () => {
   const createMutation = useMutation({
     mutationFn: createEmployee,
     onSuccess: () => {
+      setIsDirty(false); // Reset dirty state on success
       messageApi.success("Employee created successfully");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      setIsDirty(false); // Reset dirty state on success
+      // Redirect back to employees list after a short delay
+      setTimeout(() => {
+        navigate(
+          preselectedCafeName
+            ? `/employees?cafe=${preselectedCafeName}`
+            : "/employees"
+        );
+      }, 500);
     },
     onError: (error) => {
       messageApi.error(getErrorMessage(error));
@@ -90,9 +100,13 @@ const EmployeeForm: React.FC = () => {
     mutationFn: ({ id, data }: { id: string; data: EmployeeFormData }) =>
       updateEmployee(id, data),
     onSuccess: () => {
+      setIsDirty(false); // Reset dirty state on success
       messageApi.success("Employee updated successfully");
       queryClient.invalidateQueries({ queryKey: ["employees"] });
-      setIsDirty(false); // Reset dirty state on success
+      // Redirect back to employees list after a short delay
+      setTimeout(() => {
+        navigate("/employees");
+      }, 500);
     },
     onError: (error) => {
       messageApi.error(getErrorMessage(error));
@@ -103,6 +117,19 @@ const EmployeeForm: React.FC = () => {
     queryKey: ["cafes"],
     queryFn: () => getCafes(),
   });
+
+  // Pre-select cafe if coming from filtered employees page
+  useEffect(() => {
+    if (!isEditMode && preselectedCafeName && cafes.data) {
+      const matchingCafe = cafes.data.find(
+        (cafe) => cafe.name === preselectedCafeName
+      );
+      if (matchingCafe) {
+        form.setFieldValue("cafeId", matchingCafe.id);
+        form.setFieldValue("start_date", dayjs());
+      }
+    }
+  }, [isEditMode, preselectedCafeName, cafes.data, form]);
 
   const handleSubmit = (values: EmployeeFormValues) => {
     const employeeData: EmployeeFormData = {
