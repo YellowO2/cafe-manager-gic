@@ -6,7 +6,7 @@ Full-stack implementing a café and employee manager with NestJS, PostgreSQL, an
 - Backend: NestJS (Node 22), Prisma ORM, PostgreSQL
 
 ## Links
-
+Due to using free tier, server spins down after 15min inactive, which delays initial request by about 1min. Hence when first accessing the page, it probably takes about a minute for backend to respond. Subsequently it will be quick. Pardon 🙏
 - Live App: https://cafe-manager-gic-frontend.onrender.com
 - Deployed Backend: https://cafe-manager-gic-backend.onrender.com
 
@@ -54,13 +54,13 @@ docker compose up -d postgres
 
 ## Project Structure
 
-### Backend (NestJS + Prisma)
+### Backend
 
 <table width="100%">
 <tr>
 <td width="30%" valign="top">
 
-**Folder Structure**
+Folder Structure (simplified)
 
 ```
 backend/
@@ -117,7 +117,7 @@ graph LR
 <tr>
 <td width="30%">
 
-**Folder Structure**
+Folder Structure (simplified)
 
 ```
 frontend/
@@ -150,16 +150,21 @@ graph LR
 
 ## APIs
 
+cafes:
 - GET `/cafes?location=<string>` → list cafes with employee counts, sorted by employee count desc
 - GET `/cafes/:id` → get a cafe
 - POST `/cafes` → create cafe
 - PUT `/cafes/:id` → update cafe
 - DELETE `/cafes/:id` → delete cafe and all its employees
 
+employees:
 - GET `/employees?cafe=<string>` → list employees (optional filtering with cafe name), sorted by days worked desc
 - GET `/employees/:id` → employee details
 - POST `/employees` → create employee
 - PUT `/employees/:id` → update employee
 - DELETE `/employees/:id` → delete employee
 
+## Futher improvements
+- send and store logo data as bytea instead of base64 string
+- if more images/blob data are needed to be stored, would consider storing them in a cloud blob storage + CDN service.
 

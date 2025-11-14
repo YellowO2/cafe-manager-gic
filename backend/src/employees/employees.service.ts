@@ -2,8 +2,13 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEmployeeDto } from './dto/create-employee.dto';
 import { UpdateEmployeeDto } from './dto/update-employee.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { nanoid } from 'nanoid';
+import { customAlphabet } from 'nanoid';
 import dayjs from 'dayjs';
+
+const generateEmployeeId = customAlphabet(
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+  7,
+);
 
 @Injectable()
 export class EmployeesService {
@@ -11,7 +16,7 @@ export class EmployeesService {
 
   create(createEmployeeDto: CreateEmployeeDto) {
     const { cafeId, ...employeeData } = createEmployeeDto;
-    const newEmployeeId = `UI${nanoid(7)}`;
+    const newEmployeeId = `UI${generateEmployeeId()}`;
     return this.prisma.employee.create({
       data: {
         id: newEmployeeId,
