@@ -40,6 +40,7 @@ npm run dev
 ```
 
 **Backend**
+
 First run Postgres
 ```
 docker compose up -d postgres
@@ -49,8 +50,9 @@ Then
 ```bash
 nvm use 22
 cd backend
+cp .env.example .env
 npm install
-npm run prisma:generate && npm run prisma:migrate # if needed
+npx prisma generate
 npm run start:dev
 ```
 
