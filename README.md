@@ -1,13 +1,14 @@
 # Café Employee Manager
 
-Full-stack implementing a café and employee manager with NestJS, PostgreSQL, and a React frontend.
+Full-stack implementation of a café and employee manager with NestJS, PostgreSQL, and a React frontend.
 
 - Frontend: React (Vite), Ant Design, AG Grid, TanStack Query, React Router, Day.js, TypeScript
 - Backend: NestJS (Node 22), Prisma ORM, PostgreSQL
+  
 ![Demo](.github_assets/demo.gif)
 
 ## Links
-Due to using free tier, server spins down after 15min inactive, which delays initial request by about 1min. Hence when first accessing the page, it probably takes about a minute for backend to respond. Subsequently it will be quick. Pardon 🙏
+Due to using the free tier, the server spins down after 15 minutes of inactivity, which delays the initial request by about 1 min. Hence, when first accessing the page, it probably takes about a minute for the backend to respond. Subsequently, it will be quick. Pardon 🙏
 - Live App: https://cafe-manager-gic-frontend.onrender.com
 - Deployed Backend: https://cafe-manager-gic-backend.onrender.com
 
@@ -26,7 +27,7 @@ Services:
 - Backend: http://localhost:3000
 - Postgres: localhost:5432
 
-Data is seeded automatically by Prisma on first run.
+Data is seeded automatically by Prisma on the first run.
 
 ### Method 2: Individually
 
@@ -170,7 +171,7 @@ employees:
 - PUT `/employees/:id` → update employee
 - DELETE `/employees/:id` → delete employee
 
-## Futher improvements
+## Further improvements
 - send and store logo data as bytea instead of base64 string
-- if more images/blob data are needed to be stored, would consider storing them in a cloud blob storage + CDN service.
+- If more images/blob data are needed to be stored, would consider storing them in a cloud blob storage + CDN service.
 
