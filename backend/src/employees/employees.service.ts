@@ -57,10 +57,18 @@ export class EmployeesService {
       },
     });
 
-    const today = dayjs();
+    const today = dayjs().startOf('day');
     return employees.map((employee) => {
       const { cafe, start_date, cafeId, ...restOfEmployee } = employee;
-      const days_worked = start_date ? today.diff(dayjs(start_date), 'day') : 0;
+
+      let days_worked = 0;
+      if (start_date) {
+        // Normalize to date-only (YYYY-MM-DD) to avoid timezone rounding issues
+        const dateOnly = dayjs(start_date).format('YYYY-MM-DD');
+        const startDay = dayjs(dateOnly).startOf('day');
+        days_worked = today.diff(startDay, 'day');
+      }
+
       return {
         ...restOfEmployee,
         days_worked,
