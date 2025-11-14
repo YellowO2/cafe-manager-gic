@@ -25,7 +25,7 @@ const EmployeesPage: React.FC = () => {
   });
 
   const handleAddNew = () => {
-    navigate("/employees/add");
+    navigate(cafeName ? `/employees/add?cafe=${cafeName}` : "/employees/add");
   };
 
   const columnDefs: ColDef<Employee>[] = [

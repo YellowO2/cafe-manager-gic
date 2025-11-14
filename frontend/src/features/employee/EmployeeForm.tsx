@@ -101,12 +101,14 @@ const EmployeeForm: React.FC = () => {
       updateEmployee(id, data),
     onSuccess: () => {
       setIsDirty(false); // Reset dirty state on success
-      messageApi.success("Employee updated successfully");
+      messageApi.success(
+        "Employee updated successfully. Navigating back in 3s..."
+      );
       queryClient.invalidateQueries({ queryKey: ["employees"] });
       // Redirect back to employees list after a short delay
       setTimeout(() => {
         navigate("/employees");
-      }, 500);
+      }, 3000);
     },
     onError: (error) => {
       messageApi.error(getErrorMessage(error));
@@ -120,13 +122,33 @@ const EmployeeForm: React.FC = () => {
 
   // Pre-select cafe if coming from filtered employees page
   useEffect(() => {
-    if (!isEditMode && preselectedCafeName && cafes.data) {
+    if (
+      !isEditMode &&
+      preselectedCafeName &&
+      cafes.data &&
+      !form.getFieldValue("cafeId")
+    ) {
       const matchingCafe = cafes.data.find(
         (cafe) => cafe.name === preselectedCafeName
       );
       if (matchingCafe) {
-        form.setFieldValue("cafeId", matchingCafe.id);
-        form.setFieldValue("start_date", dayjs());
+        const startDateValue = dayjs();
+        form.setFieldsValue({
+          cafeId: matchingCafe.id,
+          start_date: startDateValue,
+        });
+        setInitialValues((prev) => ({
+          ...(prev ?? {
+            name: "",
+            email_address: "",
+            phone_number: "",
+            gender: "male",
+            cafeId: undefined,
+            start_date: null,
+          }),
+          cafeId: matchingCafe.id,
+          start_date: startDateValue,
+        }));
       }
     }
   }, [isEditMode, preselectedCafeName, cafes.data, form]);

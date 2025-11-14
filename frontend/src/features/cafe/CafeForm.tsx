@@ -103,12 +103,12 @@ const CafeForm: React.FC = () => {
       updateCafe(id, data),
     onSuccess: () => {
       setIsDirty(false); // Reset dirty state on success
-      messageApi.success("Café updated successfully");
+      messageApi.success("Café updated successfully. Navigating back in 3s...");
       queryClient.invalidateQueries({ queryKey: ["cafes"] });
       // Redirect back to cafes list after a short delay
       setTimeout(() => {
         navigate("/cafes");
-      }, 500);
+      }, 3000);
     },
     onError: (error) => {
       messageApi.error(getErrorMessage(error));
