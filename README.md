@@ -29,7 +29,7 @@ Data is seeded automatically by Prisma on first run.
 
 ### Method 2: Individually
 
-Frontend
+**Frontend**
 ```bash
 nvm use 22
 cd frontend
@@ -38,7 +38,13 @@ npm install
 npm run dev
 ```
 
-Backend
+**Backend**
+First run Postgres
+```
+docker compose up -d postgres
+```
+
+Then
 ```bash
 nvm use 22
 cd backend
@@ -47,10 +53,7 @@ npm run prisma:generate && npm run prisma:migrate # if needed
 npm run start:dev
 ```
 
-Postgres
-```
-docker compose up -d postgres
-```
+
 
 ## Project Structure
 

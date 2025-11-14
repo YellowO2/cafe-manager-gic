@@ -161,7 +161,7 @@ const EmployeeForm: React.FC = () => {
       gender: values.gender,
       cafeId: values.cafeId,
       start_date: values.start_date
-        ? values.start_date.toISOString()
+        ? values.start_date.format("YYYY-MM-DD")
         : undefined,
     };
 
