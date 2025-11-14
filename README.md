@@ -4,6 +4,7 @@ Full-stack implementing a café and employee manager with NestJS, PostgreSQL, an
 
 - Frontend: React (Vite), Ant Design, AG Grid, TanStack Query, React Router, Day.js, TypeScript
 - Backend: NestJS (Node 22), Prisma ORM, PostgreSQL
+![Demo](.github_assets/demo.gif)
 
 ## Links
 Due to using free tier, server spins down after 15min inactive, which delays initial request by about 1min. Hence when first accessing the page, it probably takes about a minute for backend to respond. Subsequently it will be quick. Pardon 🙏
