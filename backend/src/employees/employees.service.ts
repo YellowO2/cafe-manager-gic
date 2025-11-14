@@ -36,7 +36,7 @@ export class EmployeesService {
       });
 
       if (!cafe) {
-        return []; // Return empty array if cafe not found
+        return [];
       }
 
       cafeId = cafe.id;
@@ -80,15 +80,21 @@ export class EmployeesService {
     return employee;
   }
 
+  /**
+   * Update employee and reassign/unassign cafe.
+   * - If cafeId is provided:
+   *   - if null: disconnect from cafe and clear start_date
+   *   - if non-null: connect to cafe and set start_date
+   */
   async update(id: string, updateEmployeeDto: UpdateEmployeeDto) {
-    await this.findOne(id); // Check if employee exists
+    await this.findOne(id);
 
     const { cafeId, start_date, ...employeeData } = updateEmployeeDto;
 
     return this.prisma.employee.update({
       where: { id },
       data: {
-        ...employeeData, // Update simple fields like name, email
+        ...employeeData,
         ...(cafeId !== undefined && {
           // Only update relationship if cafeId was in the request
           start_date: cafeId ? start_date : null, // Set date if assigning, null if un-assigning

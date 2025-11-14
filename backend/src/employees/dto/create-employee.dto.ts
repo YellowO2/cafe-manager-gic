@@ -33,7 +33,6 @@ export class CreateEmployeeDto {
   })
   phone_number: string;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
   @IsEnum(Gender, { message: 'Gender must be either "male" or "female".' })
   @IsNotEmpty({ message: 'Gender is required.' })
   gender: Gender;

@@ -1,6 +1,6 @@
 # Café Employee Manager
 
-Production-ready full-stack implementing a café and employee manager with a RESTful API, PostgreSQL, and a React (Vite) frontend.
+Full-stack implementing a café and employee manager with NestJS, PostgreSQL, and a React frontend.
 
 ## Links
 
@@ -54,7 +54,127 @@ Postgres
 docker compose up -d postgres
 ```
 
-## API (Summary)
+## Project Structure
+
+### Backend (NestJS + Prisma)
+
+<table>
+<tr>
+<td width="40%">
+
+**Folder Structure**
+
+```
+backend/
+├── src/
+│   ├── cafes/
+│   │   ├── cafes.controller.ts
+│   │   ├── cafes.service.ts
+│   │   └── dto/
+│   ├── employees/
+│   │   ├── employees.controller.ts
+│   │   ├── employees.service.ts
+│   │   └── dto/
+│   └── prisma/
+│       ├── prisma.service.ts
+│       └── prisma.module.ts
+└── prisma/
+    ├── schema.prisma
+    └── migrations/
+```
+
+</td>
+<td width="60%">
+
+**Architecture**
+
+```mermaid
+graph TB
+    subgraph Backend
+        subgraph EmployeesModule
+            EmpController[EmployeesController]
+            EmpService[EmployeesService]
+            EmpController --> EmpService
+        end
+        
+        subgraph CafesModule
+            CafeController[CafesController]
+            CafeService[CafesService]
+            CafeController --> CafeService
+        end
+        
+        PrismaService[PrismaService]
+        
+        EmpService --> PrismaService
+        CafeService --> PrismaService
+    end
+    
+    PrismaService --> DB[(PostgreSQL)]
+```
+
+</td>
+</tr>
+</table>
+
+### Frontend (React + Vite)
+
+<table>
+<tr>
+<td width="40%">
+
+**Folder Structure**
+
+```
+frontend/
+└── src/
+    ├── api/
+    │   # API client
+    ├── features/
+    │   # Main pages
+    ├── components/
+    │   # Reusable UI
+    └── hooks/
+        # Custom hooks
+```
+
+</td>
+<td width="60%">
+
+**Architecture**
+
+```mermaid
+graph TB
+    subgraph Frontend
+        subgraph Features
+            CafePage[CafesPage]
+            EmployeePage[EmployeesPage]
+            CafeForm[CafeForm]
+            EmployeeForm[EmployeeForm]
+        end
+        
+        subgraph Components
+            FormTextField
+            PageHeader
+            TableActionCell
+        end
+        
+        subgraph API
+            CafesAPI[cafes.ts]
+            EmployeesAPI[employees.ts]
+        end
+        
+        Features --> API
+        Features --> Components
+    end
+    
+    API -->|REST HTTP| BackendAPI[Backend API]
+```
+
+</td>
+</tr>
+</table>
+
+## APIs
 
 - GET `/cafes?location=<string>` → list cafes with employee counts, sorted by employee count desc
 - GET `/cafes/:id` → get a cafe
@@ -68,10 +188,4 @@ docker compose up -d postgres
 - PUT `/employees/:id` → update employee
 - DELETE `/employees/:id` → delete employee
 
-## Project Structure
 
-```
-backend/   # NestJS API + Prisma
-frontend/  # React (Vite) app
-docker-compose.yml
-```
